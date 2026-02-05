@@ -1,17 +1,17 @@
-import CatalogSlider from "../CatalogSlider/CatalogSlider";
-import zamorLogodf from "../Images/logo ZAMOR CAPS.jpg";
+import CatalogSlider from "./CatalogSlider/CatalogSlider";
+import zamorLogodf from "../../Images/logo ZAMOR CAPS.jpg";
 import styles from "./CatalogSection.module.css";
 
 // Images moved to: src/Images/ImagenesCapsZC/
-import img01 from "../Images/ImagenesCapsZC/01.png";
-import img02 from "../Images/ImagenesCapsZC/02.jpg";
-import img03 from "../Images/ImagenesCapsZC/03.jpg";
-import img04 from "../Images/ImagenesCapsZC/04.png";
-import img05 from "../Images/ImagenesCapsZC/05.png";
-import img06 from "../Images/ImagenesCapsZC/06.png";
-import img07 from "../Images/ImagenesCapsZC/07.png";
-import img08 from "../Images/ImagenesCapsZC/08.png";
-import img09 from "../Images/ImagenesCapsZC/09.png";
+import img01 from "../../Images/ImagenesCapsZC/01.png";
+import img02 from "../../Images/ImagenesCapsZC/02.jpg";
+import img03 from "../../Images/ImagenesCapsZC/03.jpg";
+import img04 from "../../Images/ImagenesCapsZC/04.png";
+import img05 from "../../Images/ImagenesCapsZC/05.png";
+import img06 from "../../Images/ImagenesCapsZC/06.png";
+import img07 from "../../Images/ImagenesCapsZC/07.png";
+import img08 from "../../Images/ImagenesCapsZC/08.png";
+import img09 from "../../Images/ImagenesCapsZC/09.png";
 
 export default function CatalogSection() {
   const items1 = [

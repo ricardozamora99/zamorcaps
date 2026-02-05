@@ -1,10 +1,9 @@
-/* App.css (NEW) — everything EXCEPT About styles */
+/* App.css — GLOBAL (premium + PC angosto, móvil full) */
 
 /* =========================
-   GLOBAL
+   TOKENS / GLOBAL
    ========================= */
-
-:root {
+:root{
   --bg: #fbfbfc;
   --panel: #ffffff;
   --text: #141416;
@@ -13,16 +12,18 @@
   --line: rgba(20,20,22,0.10);
   --line-strong: rgba(20,20,22,0.18);
 
-  --brand: #261212;      /* tu marrón */
-  --accent: #173778;     /* azul */
-  --danger: #d61818;     /* rojo */
+  --brand: #261212;
+  --accent: #173778;
+  --danger: #d61818;
 
   --shadow: 0 10px 30px rgba(0,0,0,0.08);
   --shadow-soft: 0 6px 18px rgba(0,0,0,0.06);
+
   --radius: 18px;
   --radius-sm: 14px;
 
-  --container: 1500px;
+  /* ✅ ESTE ES EL ANCHO EN PC (más pequeño = más “margen” lateral) */
+  --container: 1600px;
 }
 
 *{ box-sizing: border-box; }
@@ -38,34 +39,67 @@ html, body, #root{
 }
 
 body{
-  margin: 0px;
-  background: radial-gradient(1200px 600px at 50% -200px, rgba(214,24,24,0.07), transparent 60%),
-              radial-gradient(1200px 600px at 80% 0px, rgba(23,55,120,0.06), transparent 55%),
-              var(--bg);
+  margin: 0; /* ✅ NO tocar margin aquí */
+  background:
+    radial-gradient(1200px 600px at 50% -200px, rgba(214,24,24,0.07), transparent 60%),
+    radial-gradient(1200px 600px at 80% 0px, rgba(23,55,120,0.06), transparent 55%),
+    var(--bg);
   font-size: 18px;
   line-height: 1.5;
 }
 
-/* Contenedor general */
-#root{
-  max-width: 2080px;
-  margin: 0 auto;
-  padding: 22px 22px 60px 22px;
-}
-
-/* Asegura consistencia en botones/inputs */
-button, input, textarea, select{
-  font-family: inherit;
-}
-
-
-
+a{ color: inherit; }
+img{ max-width: 100%; display: block; }
+button, input, textarea, select{ font-family: inherit; }
 
 /* =========================
-   RESPONSIVE (GLOBAL)
+   LAYOUT: PC (ANGOSTO)
    ========================= */
+#root{
+  /* ✅ aquí se “reduce” en PC */
+  max-width: var(--container);
+  margin: 0 auto;
 
+  /* padding interno del contenido en PC */
+  padding: 22px 18px 60px 18px;
+}
+
+/* =========================
+   PREMIUM BASE: sections
+   ========================= */
+.section{
+  margin: 22px 0;     /* ya no auto: el centrado lo hace #root */
+  padding: 26px 22px;
+
+  background: rgba(255,255,255,0.96);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+
+.section h2{
+  margin: 0 0 12px 0;
+  color: var(--brand);
+  font-size: clamp(26px, 2.2vw, 34px);
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.section h3{
+  margin: 18px 0 12px 0;
+  color: var(--brand);
+  font-size: clamp(18px, 1.4vw, 22px);
+}
+
+/* =========================
+   RESPONSIVE: MÓVIL FULL (igual)
+   ========================= */
 @media (max-width: 650px){
-  #root{ padding: 16px 14px 50px 14px; }
+  /* ✅ móvil full: ocupa todo el ancho */
+  #root{
+    max-width: 100%;
+    padding: 16px 14px 50px 14px;
+  }
+
   .section{ padding: 18px 14px; }
 }

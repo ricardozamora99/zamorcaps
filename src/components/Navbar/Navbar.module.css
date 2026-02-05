@@ -209,13 +209,17 @@
   .toggle{ display: grid; place-items: center; }
   .menu{ display: none; }
 
+  /* Ajusta esto si tu navbar mide distinto */
+  :root { --navH: 100px; }
+
+  /* Panel del menú (hamburguesa) */
   .menuOpen{
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
 
-    position: absolute;
-    top: calc(100% + 10px);
+    position: fixed;
+    top: calc(var(--navH) + 10px);
     left: 12px;
     right: 12px;
     z-index: 999;
@@ -229,42 +233,53 @@
     box-shadow: var(--shadow);
 
     align-items: center;
+
+    max-height: calc(100vh - (var(--navH) + 22px));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .menuOpen a{
     display: block;
+    width: 100%;
     text-align: center;
     padding: 12px 12px;
   }
 
+  /* IMPORTANTE: el item dropdown ocupa todo el ancho */
   .menuOpen .dropdown{
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; /* centra el botón y el submenu */
     gap: 6px;
   }
 
+  /* Botón “CATÁLOGO” full width */
   .menuOpen .linkBtn{
     width: 100%;
     text-align: center;
   }
 
-  /* En móvil el submenu es una cajita estática (no absolute) */
-  .dropdownMenu{
+  /* SUBMENU: centrado y sin salirse */
+  .menuOpen .dropdownMenu{
     position: static;
     transform: none;
 
-    width: min(220px, 90%);
-    margin: 6px 0 0 0;
+    width: min(260px, 92%);
+    margin: 6px auto 0;     /* CLAVE: auto = centrado */
+    align-self: center;     /* CLAVE extra: fuerza centrado en flex */
 
-    box-shadow: var(--shadow);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 10px;
+
     background: rgba(255,255,255,0.98);
+    box-shadow: var(--shadow);
 
-    /* cerrado por defecto */
     display: none;
 
-    /* neutraliza el sistema opacity/visibility en móvil */
+    /* neutraliza el sistema desktop */
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
@@ -273,10 +288,10 @@
   }
 
   .dropdownOpen .dropdownMenu{
-    display: block; /* abierto en móvil */
+    display: block;
   }
 
-  .dropdownMenu a{
+  .menuOpen .dropdownMenu li a{
     width: 100%;
     text-align: center;
     padding: 10px 12px;

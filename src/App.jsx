@@ -8,7 +8,7 @@ import "./App.css";
 
 import { useState, useEffect } from "react";
 
-import CatalogSection from "./Catalog/CatalogSection";
+import CatalogSection from "./sections/Catalog/CatalogSection";
 import RecommendationsSection from "./sections/Recommendations/RecommendationsSection";
 import HowToBuySection from "./sections/HowToBuy/HowToBuySection";
 import ContactSection from "./sections/Contact/ContactSection";
@@ -16,9 +16,6 @@ import HeroSection from "./sections/Hero/HeroSection";
 import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
 import AboutSection from "./sections/About/AboutSection";
-
-
-
 
 
 
@@ -57,6 +54,10 @@ function App() {
 <main>
       {/* HERO */}
 <HeroSection closeMenu={closeMenu} />
+
+
+
+{/*ABOUT */}
 <AboutSection />
 
 
