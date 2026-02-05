@@ -1,0 +1,239 @@
+.rec{
+  text-align: left;
+}
+
+.rec h2{
+  text-align: center;
+}
+
+.sub{
+  text-align: center;
+  margin: 0 auto 18px auto;
+  max-width: 900px;
+  color: var(--muted);
+}
+
+.block{
+  margin: 18px 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background:
+    radial-gradient(600px 240px at 10% 0%, rgba(23,55,120,0.06), transparent 60%),
+    radial-gradient(600px 240px at 90% 0%, rgba(214,24,24,0.05), transparent 55%),
+    #fff;
+  box-shadow: var(--shadow-soft);
+}
+
+.block h3{
+  margin: 0 0 14px 0;
+  color: var(--brand);
+  font-weight: 800;
+}
+
+/* Cards tipo gorra */
+.cards{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(230px, 1fr));
+  gap: 14px;
+}
+
+.card{
+  background: rgba(255,255,255,0.88);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 10px 18px rgba(0,0,0,0.05);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.card:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 16px 26px rgba(0,0,0,0.10);
+}
+
+.card h4{
+  margin: 0 0 10px 0;
+  color: var(--text);
+  font-size: 1.12rem;
+  font-weight: 800;
+}
+
+.card p{
+  margin: 0 0 8px 0;
+  line-height: 1.28;
+  color: rgba(20,20,22,0.82);
+  font-size: 0.98rem;
+}
+
+.tip{
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line-strong);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Banner imagen estilos gorras */
+.banner{
+  width: 100%;
+  max-width: 1100px;
+  height: auto;
+  margin: 16px auto 10px auto;
+  display: block;
+
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Mini guía talla */
+.sizeSteps{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.sizeStep{
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+
+  background: rgba(255,255,255,0.88);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 14px;
+
+  box-shadow: 0 10px 18px rgba(0,0,0,0.05);
+}
+
+.badge{
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+
+  background: var(--danger);
+  color: #fff;
+  font-weight: 900;
+}
+
+.pill{
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  margin-right: 6px;
+  font-size: 0.95rem;
+}
+
+/* Swatches */
+.swatches{
+  display: grid;
+  grid-template-columns: repeat(5, minmax(170px, 1fr));
+  gap: 12px;
+}
+
+.swatch{
+  display: flex;
+  gap: 12px;
+  align-items: center;
+
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 12px;
+
+  background: rgba(255,255,255,0.88);
+  box-shadow: 0 10px 18px rgba(0,0,0,0.05);
+}
+
+.swatch strong{ font-weight: 800; }
+
+.swatch p{
+  margin: 2px 0 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.dot{
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.18);
+  display: inline-block;
+}
+
+.cBlack{ background: #111; }
+.cRed{ background: #d10000; }
+.cWhite{ background: #fff; }
+.cBeige{ background: #d8c3a5; }
+.cNavy{ background: #0b1b4a; }
+
+/* Quick buttons */
+.mini{
+  margin: 0 0 12px 0;
+  color: var(--muted);
+}
+
+.quick{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.qbtn{
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.92);
+
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-weight: 800;
+  cursor: pointer;
+
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.qbtn:hover{
+  background: rgba(23,55,120,0.10);
+  color: var(--accent);
+  border-color: rgba(23,55,120,0.22);
+  transform: translateY(-1px);
+}
+
+.qbtn:active{
+  transform: translateY(0) scale(0.98);
+}
+
+.answer{
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.clear{
+  border: 0;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* responsive pieces that were in App.css */
+@media (max-width: 1200px){
+  .cards{ grid-template-columns: repeat(2, 1fr); }
+  .swatches{ grid-template-columns: repeat(2, 1fr); }
+  .sizeSteps{ grid-template-columns: 1fr; }
+}
+
+@media (max-width: 650px){
+  .cards{ grid-template-columns: 1fr; }
+  .swatches{ grid-template-columns: 1fr; }
+}

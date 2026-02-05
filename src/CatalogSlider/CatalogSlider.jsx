@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import styles from "./CatalogSlider.module.css";
 
 function ImgWithFallback({ srcs, alt }) {
   const first = Array.isArray(srcs) ? srcs[0] : srcs;
@@ -34,22 +35,26 @@ export default function CatalogSlider({ items }) {
     const el = trackRef.current;
     if (!el) return;
 
-    const card = el.querySelector(".catalog-card");
+    const card = el.querySelector(`.${styles.card}`);
     const cardW = card ? card.getBoundingClientRect().width : 260;
     const gap = 18;
     el.scrollBy({ left: dir * (cardW * 2 + gap * 2), behavior: "smooth" });
   };
 
   return (
-    <div className="catalog-slider">
-      <button className="catalog-arrow left" onClick={() => scrollByCards(-1)} aria-label="Anterior">
+    <div className={styles.slider}>
+      <button
+        className={`${styles.arrow} ${styles.left}`}
+        onClick={() => scrollByCards(-1)}
+        aria-label="Anterior"
+      >
         ‹
       </button>
 
-      <div className="catalog-track" ref={trackRef}>
+      <div className={styles.track} ref={trackRef}>
         {items.map((it, idx) => (
-          <article className="catalog-card" key={idx}>
-            <div className="catalog-img">
+          <article className={styles.card} key={idx}>
+            <div className={styles.imgWrap}>
               {it.href ? (
                 <a href={it.href} target="_blank" rel="noopener noreferrer">
                   <ImgWithFallback srcs={it.img} alt={`Producto ${idx + 1}`} />
@@ -60,16 +65,28 @@ export default function CatalogSlider({ items }) {
             </div>
 
             {(it.talla || it.tipo) && (
-              <div className="catalog-meta">
-                {it.talla && <div><strong>Talla:</strong> {it.talla}</div>}
-                {it.tipo && <div><strong>Tipo:</strong> {it.tipo}</div>}
+              <div className={styles.meta}>
+                {it.talla && (
+                  <div>
+                    <strong>Talla:</strong> {it.talla}
+                  </div>
+                )}
+                {it.tipo && (
+                  <div>
+                    <strong>Tipo:</strong> {it.tipo}
+                  </div>
+                )}
               </div>
             )}
           </article>
         ))}
       </div>
 
-      <button className="catalog-arrow right" onClick={() => scrollByCards(1)} aria-label="Siguiente">
+      <button
+        className={`${styles.arrow} ${styles.right}`}
+        onClick={() => scrollByCards(1)}
+        aria-label="Siguiente"
+      >
         ›
       </button>
     </div>

@@ -1,0 +1,48 @@
+/* Make sure the whole section content is centered like before */
+.section{
+  max-width: var(--container);
+  margin: 22px auto;
+  padding: 26px 22px;
+
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Force the main title centered */
+.h2{
+  margin: 0 0 12px 0;
+  color: var(--brand);
+  font-size: clamp(26px, 2.2vw, 34px);
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+/* Subtitle under CATÁLOGO */
+.sub{
+  text-align: center;
+  margin: 0 auto 18px auto;
+  max-width: 900px;
+  color: #6e6666;
+}
+
+/* GORRAS / BOLSOS */
+.title{
+  margin: 18px 0 14px 0;
+  color: #cb0e0e;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+/* Texto bajo el slider */
+.description{
+  margin: 6px 0 14px;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: #444;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  text-align: left;
+}

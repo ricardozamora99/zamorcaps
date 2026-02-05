@@ -1,0 +1,286 @@
+.navbar{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  background: rgba(255,255,255,0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  border-bottom: 1px solid var(--line);
+}
+
+.inner{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 14px 14px;
+}
+
+/* layout del nav (logo + menu) */
+.wrap{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  gap: 12px;
+}
+
+/* Logo */
+.home{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 1px;
+  border-radius: 12px;
+}
+
+.logo{
+  height: 100px;
+  width: auto;
+  display: block;
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.08));
+  transition: transform 160ms ease, filter 160ms ease;
+}
+
+.home:hover{
+  background: rgba(4, 2, 2, 0.06);
+}
+
+.home:hover .logo{
+  transform: translateY(-1px);
+  filter: drop-shadow(0 10px 16px rgba(214,24,24,0.14));
+}
+
+/* Menú desktop */
+.menu{
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 160px;
+  margin: 0;
+  padding: 0;
+  font-size: 22px;
+}
+
+.menu a{
+  text-decoration: none;
+  color: var(--brand);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 10px 12px;
+  border-radius: 12px;
+
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.menu a:hover{
+  background: rgba(23,55,120,0.08);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* Botón hamburguesa */
+.toggle{
+  display: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid var(--line-strong);
+  background: rgba(255,255,255,0.92);
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 0;
+}
+
+/* Botón Catálogo (parece link) */
+.linkBtn{
+  background: transparent;
+  border: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--brand);
+  cursor: pointer;
+
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease;
+
+  font-size: 22px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  margin: 0;
+}
+
+.linkBtn:hover{
+  background: rgba(23,55,120,0.08);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* flecha */
+.chev{
+  display: inline-block;
+  transition: transform 160ms ease;
+  margin-left: 6px;
+  line-height: 1;
+}
+.chevUp{ transform: rotate(180deg); }
+
+/* Dropdown (CONTROLADO POR ESTADO, NO POR HOVER) */
+.dropdown{
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dropdownMenu{
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 10px;
+  min-width: 190px;
+
+  list-style: none;
+  margin: 0;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  box-shadow: var(--shadow);
+
+  transition:
+    opacity 200ms ease,
+    transform 120ms ease,
+    visibility 0s linear 200ms;
+}
+
+.dropdownMenu li a{
+  display: block;
+  padding: 10px 12px;
+  border-radius: 12px;
+
+  color: var(--brand);
+  font-weight: 700;
+}
+
+.dropdownMenu li a:hover{
+  background: rgba(214,24,24,0.08);
+  color: var(--danger);
+}
+
+/* OPEN state (desktop) */
+.dropdownOpen .dropdownMenu{
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+
+  transition:
+    opacity 200ms ease,
+    transform 120ms ease,
+    visibility 0s;
+}
+
+/* responsive navbar */
+@media (max-width: 1200px){
+  .inner{ max-width: 100%; }
+  .menu{
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 900px){
+  .toggle{ display: grid; place-items: center; }
+  .menu{ display: none; }
+
+  .menuOpen{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 12px;
+    right: 12px;
+    z-index: 999;
+
+    padding: 12px;
+    margin: 0;
+
+    background: rgba(255,255,255,0.97);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+
+    align-items: center;
+  }
+
+  .menuOpen a{
+    display: block;
+    text-align: center;
+    padding: 12px 12px;
+  }
+
+  .menuOpen .dropdown{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .menuOpen .linkBtn{
+    width: 100%;
+    text-align: center;
+  }
+
+  /* En móvil el submenu es una cajita estática (no absolute) */
+  .dropdownMenu{
+    position: static;
+    transform: none;
+
+    width: min(220px, 90%);
+    margin: 6px 0 0 0;
+
+    box-shadow: var(--shadow);
+    background: rgba(255,255,255,0.98);
+
+    /* cerrado por defecto */
+    display: none;
+
+    /* neutraliza el sistema opacity/visibility en móvil */
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: none;
+    min-width: auto;
+  }
+
+  .dropdownOpen .dropdownMenu{
+    display: block; /* abierto en móvil */
+  }
+
+  .dropdownMenu a{
+    width: 100%;
+    text-align: center;
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-weight: 700;
+  }
+}

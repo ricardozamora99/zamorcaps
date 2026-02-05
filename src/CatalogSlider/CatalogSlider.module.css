@@ -1,0 +1,132 @@
+.slider{
+  position: relative;
+  border: 1px solid var(--line-strong);
+  border-radius: 18px;
+
+  padding: 22px 42px;
+  margin: 0 auto 26px auto;
+
+  background:
+    linear-gradient(180deg, rgba(214,24,24,0.04), transparent 45%),
+    var(--panel);
+
+  box-shadow: var(--shadow-soft);
+}
+
+.track{
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 10px;
+
+  scrollbar-width: none;
+}
+.track::-webkit-scrollbar{ display:none; }
+
+.card{
+  flex: 0 0 250px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 10px 18px rgba(0,0,0,0.05);
+
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.card:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 16px 28px rgba(0,0,0,0.10);
+}
+
+.imgWrap{
+  height: 300px;
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.imgWrap img{
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  display: block;
+  transform: scale(1.33);
+  transform-origin: center;
+}
+
+.meta{
+  padding: 12px 14px 14px 14px;
+  text-align: left;
+  font-size: 0.98rem;
+  color: rgba(20,20,22,0.78);
+}
+.meta strong{ color: var(--text); }
+
+/* Flechas */
+.arrow{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+
+  width: 54px;
+  height: 54px;
+  border-radius: 999px;
+
+  border: 1px solid var(--line-strong);
+  background: rgba(255,255,255,0.90);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  color: var(--text);
+  cursor: pointer;
+
+  display: grid;
+  place-items: center;
+  font-size: 34px;
+  line-height: 0;
+  padding: 0;
+
+  box-shadow: var(--shadow);
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.left{
+  left: 0;
+  transform: translate(-45%, -50%);
+}
+
+.right{
+  right: 0;
+  transform: translate(45%, -50%);
+}
+
+.arrow:hover{
+  background: var(--text);
+  color: #fff;
+  border-color: rgba(0,0,0,0.30);
+}
+
+.arrow:active{
+  transform: translate(-45%, -50%) scale(0.96);
+}
+.right:active{
+  transform: translate(45%, -50%) scale(0.96);
+}
+
+/* responsive bits that were in App.css */
+@media (max-width: 1200px){
+  .slider{ padding: 20px 40px; }
+}
+
+@media (max-width: 650px){
+  .card{ flex: 0 0 220px; }
+  .slider{ padding: 18px 34px; }
+  .arrow{ width: 48px; height: 48px; font-size: 30px; }
+}

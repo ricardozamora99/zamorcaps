@@ -1,0 +1,45 @@
+.contact{
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.item{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+
+  text-decoration: none;
+  background: rgba(255,255,255,0.92);
+  color: var(--text);
+
+  box-shadow: 0 10px 18px rgba(0,0,0,0.05);
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.item:visited{ color: var(--text); }
+.item *{ color: inherit; }
+
+.item:hover{
+  background: rgba(23,55,120,0.06);
+  border-color: rgba(23,55,120,0.20);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.left{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon{
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.10));
+}

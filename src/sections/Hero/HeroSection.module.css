@@ -1,0 +1,131 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 80vh;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 40px 22px;
+  gap: 40px;
+}
+
+.content {
+  flex: 1;
+  text-align: left;
+}
+
+.title {
+  font-size: clamp(40px, 5vw, 70px);
+  font-weight: 900;
+  line-height: 1.1;
+  margin: 0 0 20px 0;
+  color: var(--brand);
+}
+
+.danger {
+  color: var(--danger);
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: var(--muted);
+  margin-bottom: 30px;
+  max-width: 500px;
+}
+
+.btnPrimary {
+  display: inline-block;
+  padding: 16px 32px;
+  background: var(--danger);
+  color: white;
+  text-decoration: none;
+  font-weight: 800;
+  border-radius: 12px;
+  transition: transform 0.2s ease;
+}
+
+.btnPrimary:hover {
+  transform: scale(1.05);
+  background: #b01414;
+}
+
+.visual {
+  flex: 1;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.productImg {
+  width: 150%;
+  max-width: 900px;
+  z-index: 2;
+  filter: drop-shadow(0 20px 50px rgba(0,0,0,0.15));
+  animation: float 4s ease-in-out infinite;
+}
+
+/* optional: if you keep the <div className="hero-blob" /> */
+.blob{
+  position: absolute;
+  inset: auto;
+  width: 520px;
+  height: 520px;
+  border-radius: 999px;
+  z-index: 1;
+  filter: blur(0px);
+  background:
+    radial-gradient(circle at 100% 30%, rgba(214, 24, 24, 0), transparent 60%),
+    radial-gradient(circle at 700% 100%, rgba(23, 55, 120, 0), transparent 62%);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    text-align: center;
+    padding-top: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .title,
+  .subtitle{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  .btnPrimary{
+    margin: 0 auto;
+  }
+
+  .visual{
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .productImg{
+    width: min(520px, 92vw);
+    max-width: 92vw;
+    margin: 0 auto;
+  }
+
+  .blob{
+    width: 420px;
+    height: 420px;
+  }
+}

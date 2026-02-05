@@ -1,21 +1,23 @@
 import zamorLogo from "../../Images/logo ZAMOR CAPSnoBG.png";
+import styles from "./Navbar.module.css";
 
-export default function Navbar({ menuOpen, catalogOpen, closeMenu, setMenuOpen, setCatalogOpen }) {
+export default function Navbar({
+  menuOpen,
+  catalogOpen,
+  closeMenu,
+  setMenuOpen,
+  setCatalogOpen,
+}) {
   return (
-    <header className="navbar">
-      <div className="nav-inner">
-        <nav className="nav-wrap">
-          <a
-            href="#inicio"
-            className="nav-home"
-            aria-label="Inicio"
-            onClick={closeMenu}
-          >
-            <img src={zamorLogo} alt="Zamor Caps" className="nav-home-logo" />
+    <header className={styles.navbar}>
+      <div className={styles.inner}>
+        <nav className={styles.wrap}>
+          <a href="#inicio" className={styles.home} aria-label="Inicio" onClick={closeMenu}>
+            <img src={zamorLogo} alt="Zamor Caps" className={styles.logo} />
           </a>
 
           <button
-            className="nav-toggle"
+            className={styles.toggle}
             type="button"
             aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
             aria-expanded={menuOpen}
@@ -30,19 +32,27 @@ export default function Navbar({ menuOpen, catalogOpen, closeMenu, setMenuOpen, 
             {menuOpen ? "✕" : "☰"}
           </button>
 
-          <ul className={`nav-menu ${menuOpen ? "is-open" : ""}`}>
-            <li className="dropdown">
+          <ul className={`${styles.menu} ${menuOpen ? styles.menuOpen : ""}`}>
+            <li
+              className={`${styles.dropdown} ${catalogOpen ? styles.dropdownOpen : ""}`}
+              onMouseLeave={() => {
+                // opcional: en desktop, si sales del dropdown, lo cierra
+                if (window.innerWidth > 900) setCatalogOpen(false);
+              }}
+            >
               <button
-                className="nav-link-btn nav-catalog-btn"
+                className={styles.linkBtn}
                 type="button"
                 aria-expanded={catalogOpen}
                 onClick={() => setCatalogOpen((v) => !v)}
               >
                 CATÁLOGO{" "}
-                <span className={`chev ${catalogOpen ? "up" : ""}`}>▾</span>
+                <span className={`${styles.chev} ${catalogOpen ? styles.chevUp : ""}`}>
+                  ▾
+                </span>
               </button>
 
-              <ul className={`dropdown-menu ${catalogOpen ? "is-open" : ""}`}>
+              <ul className={styles.dropdownMenu}>
                 <li>
                   <a href="#gorras" onClick={closeMenu}>
                     GORRAS
@@ -57,19 +67,15 @@ export default function Navbar({ menuOpen, catalogOpen, closeMenu, setMenuOpen, 
             </li>
 
             <li>
-              <a href="#recomendaciones" onClick={closeMenu}>
-                RECOMENDACIONES
-              </a>
+              <a href="#recomendaciones" onClick={closeMenu}>RECOMENDACIONES</a>
             </li>
+
             <li>
-              <a href="#como-comprar" onClick={closeMenu}>
-                CÓMO COMPRAR
-              </a>
+              <a href="#como-comprar" onClick={closeMenu}>CÓMO COMPRAR</a>
             </li>
+
             <li>
-              <a href="#contacto" onClick={closeMenu}>
-                CONTACTO
-              </a>
+              <a href="#contacto" onClick={closeMenu}>CONTACTO</a>
             </li>
           </ul>
         </nav>
