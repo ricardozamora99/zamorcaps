@@ -20,6 +20,26 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap"
       rel="stylesheet"
     />
+
+    <script>
+  // Si venimos del 404 fallback (/ ?p=/catalogo), reescribe la URL a /catalogo
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var p = params.get("p");
+        if (!p) return;
+
+        params.delete("p");
+        var rest = params.toString();
+        var newPath = decodeURIComponent(p);
+
+        window.history.replaceState(
+          null,
+          "",
+          newPath + (rest ? "?" + rest : "")
+        );
+      })();
+    </script>
+
     <script type="module" crossorigin src="/assets/index-BBcaHN6Q.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-KO_hRx1L.css">
   </head>
