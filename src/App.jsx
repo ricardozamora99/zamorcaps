@@ -14,7 +14,8 @@ import Footer from "./components/Footer/Footer";
 
 import CatalogPage from "./pages/Catalog/CatalogPage";
 
-const WHATSAPP_NUMBER = "573157270599";
+const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER;
+
 
 export default function App() {
   const { pathname } = useLocation();

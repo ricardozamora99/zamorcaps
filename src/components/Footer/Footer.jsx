@@ -1,7 +1,13 @@
 import styles from "./Footer.module.css";
 
-const WA_LINK =
-  "https://wa.me/573157270599?text=Hola%20Zamor%20Caps!%20Quiero%20hacer%20un%20pedido.";
+const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER;
+
+const buildWaLink = (msg) => {
+  const text = encodeURIComponent(msg);
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
+};
+
+const WA_LINK = buildWaLink("Hola Zamor Caps! Quiero hacer un pedido.");
 
 export default function Footer() {
   const year = new Date().getFullYear();
