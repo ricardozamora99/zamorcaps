@@ -1,3 +1,4 @@
+/* CatalogSection.module.css */
 .section{
   background: var(--panel);
 }
@@ -108,8 +109,14 @@
   padding: 0;
   border: 0;
   background: transparent;
-  cursor: zoom-in;
+  cursor: pointer; /* igual al CatalogPage */
+  display: block;
 }
+.imgBtn:focus{
+  outline: 2px solid rgba(203,14,14,0.35);
+  outline-offset: -2px;
+}
+
 .img{
   width: 100%;
   height: 100%;
@@ -191,7 +198,7 @@
   font-weight: 1000;
 }
 
-/* ===== NUEVO: Botón Ver catálogo completo ===== */
+/* ===== Botón Ver catálogo completo ===== */
 .bottomRow{
   display: flex;
   justify-content: center;
@@ -258,119 +265,201 @@
   background: rgba(203,14,14,0.06);
 }
 
-/* ===== MODAL ===== */
-.modal{
+/* =========================================================
+   MODAL / LIGHTBOX (idéntico al de CatalogPage)
+   ========================================================= */
+
+.catalogModal{
   position: fixed;
   inset: 0;
+  z-index: 9999;
   display: grid;
   place-items: center;
-  z-index: 1001;
   padding: 18px;
+  pointer-events: none;
 }
 
-.modalCard{
-  width: min(980px, 100%);
-  border-radius: 18px;
-  border: 1px solid rgba(0,0,0,0.12);
-  background: rgba(255,255,255,0.96);
-  box-shadow: 0 30px 70px rgba(0,0,0,0.25);
+.catalogModalCard{
+  pointer-events: auto;
+  width: min(980px, 96vw);
+  max-height: min(86vh, 760px);
   overflow: hidden;
+
+  background: rgba(255,255,255,0.98);
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 18px;
+  box-shadow: 0 28px 60px rgba(0,0,0,0.25);
+
+  display: grid;
+  grid-template-rows: auto 1fr auto;
 }
 
-.modalHead{
+.catalogModalHead{
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 14px 14px;
+
+  padding: 12px 14px;
   border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 
-.modalTitle{
+.catalogModalTitle{
   font-weight: 1000;
-  color: rgba(0,0,0,0.86);
+  color: rgba(0,0,0,0.88);
 }
 
-.modalClose{
-  width: 36px;
-  height: 36px;
+.catalogModalClose{
+  width: 40px;
+  height: 40px;
   border-radius: 12px;
-  border: 1px solid rgba(0,0,0,0.10);
-  background: rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0.95);
   cursor: pointer;
   font-weight: 1000;
 }
+.catalogModalClose:hover{
+  border-color: rgba(203,14,14,0.25);
+  background: rgba(203,14,14,0.05);
+}
 
-.modalMedia{
+.catalogModalMedia{
   position: relative;
-  height: min(60vh, 520px);
-  background: rgba(0,0,0,0.04);
-}
-
-.modalImg{
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-
-.modalNoImg{
-  width: 100%;
-  height: 100%;
+  background: rgba(0,0,0,0.03);
   display: grid;
   place-items: center;
-  font-weight: 1000;
-  color: rgba(0,0,0,0.50);
+  overflow: hidden;
 }
 
-.navLeft, .navRight{
+.catalogModalImg{
+  width: 100%;
+  height: 100%;
+  max-height: 56vh;
+  object-fit: contain;
+  display: block;
+  background: #fff;
+}
+
+.catalogModalNoImg{
+  height: 320px;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  color: rgba(0,0,0,0.55);
+}
+
+.catalogNavLeft,
+.catalogNavRight{
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   width: 44px;
   height: 44px;
   border-radius: 14px;
-  border: 1px solid rgba(0,0,0,0.10);
-  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0.92);
   cursor: pointer;
-  font-size: 22px;
-  font-weight: 1000;
+  font-size: 26px;
+  font-weight: 900;
+  display: grid;
+  place-items: center;
 }
-.navLeft{ left: 12px; }
-.navRight{ right: 12px; }
-.navLeft:disabled, .navRight:disabled{
-  opacity: 0.4;
+.catalogNavLeft{ left: 12px; }
+.catalogNavRight{ right: 12px; }
+
+.catalogNavLeft:hover,
+.catalogNavRight:hover{
+  border-color: rgba(203,14,14,0.25);
+  background: rgba(203,14,14,0.06);
+}
+.catalogNavLeft:disabled,
+.catalogNavRight:disabled{
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
-.modalBody{
-  padding: 14px;
+.catalogModalBody{
+  padding: 12px 14px 14px;
   display: grid;
   gap: 10px;
 }
 
-.modalDesc{
+.catalogModalDesc{
   margin: 0;
-  color: rgba(0,0,0,0.70);
-  font-weight: 600;
-  line-height: 1.55;
+  color: rgba(0,0,0,0.68);
+  font-weight: 650;
+  line-height: 1.45;
+  max-height: 120px;
+  overflow: auto;
 }
 
-.modalPrice{
+.catalogModalPrice{
   margin: 0;
   font-weight: 1000;
   color: rgba(0,0,0,0.78);
 }
-.modalPrice span{
+.catalogModalPrice span{
   color: rgba(0,0,0,0.55);
   margin-right: 6px;
 }
 
-.backdrop{
+.catalogModalActions{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.catalogModalBtn{
+  padding: 11px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.06);
+  background: #cb0e0e;
+  color: #fff;
+  font-weight: 1000;
+  cursor: pointer;
+}
+.catalogModalBtn:hover{ filter: brightness(0.96); }
+.catalogModalBtn:disabled{
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.catalogModalGhost{
+  padding: 11px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0.96);
+  font-weight: 1000;
+  cursor: pointer;
+  color: rgba(0,0,0,0.72);
+}
+.catalogModalGhost:hover{
+  border-color: rgba(203,14,14,0.25);
+  background: rgba(203,14,14,0.05);
+}
+
+.catalogBackdrop{
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 9998;
   background: rgba(0,0,0,0.45);
   border: 0;
+  padding: 0;
+  margin: 0;
   cursor: pointer;
+}
+
+@media (max-width: 700px){
+  .catalogModalCard{
+    width: 96vw;
+    max-height: 88vh;
+  }
+  .catalogModalImg{
+    max-height: 44vh;
+  }
+  .catalogModalActions{
+    grid-template-columns: 1fr;
+  }
 }

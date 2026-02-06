@@ -1,8 +1,8 @@
+// CatalogSection.jsx
 import { useEffect, useMemo, useState } from "react";
 import { sanity } from "../../sanityClient";
 import styles from "./CatalogSection.module.css";
 import { useNavigate } from "react-router-dom";
-
 
 export default function CatalogSection({ onAddToCart }) {
   const [products, setProducts] = useState([]);
@@ -66,21 +66,24 @@ export default function CatalogSection({ onAddToCart }) {
   // cerrar con ESC + flechas
   useEffect(() => {
     if (!open) return;
+
     const onKey = (e) => {
       if (e.key === "Escape") closeProduct();
       if (e.key === "ArrowRight") setActiveIndex((i) => i + 1);
       if (e.key === "ArrowLeft") setActiveIndex((i) => Math.max(0, i - 1));
     };
+
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const activeImages = activeProduct?.images || [];
   const maxIndex = Math.max(0, activeImages.length - 1);
   const safeIndex = Math.min(activeIndex, maxIndex);
   const bigUrl = activeImages?.[safeIndex]?.asset?.url;
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
 
   return (
     <section
@@ -98,7 +101,9 @@ export default function CatalogSection({ onAddToCart }) {
         </p>
       </header>
 
-      <h3 id="gorras" className={styles.title}>GORRAS</h3>
+      <h3 id="gorras" className={styles.title}>
+        GORRAS
+      </h3>
 
       {errorMsg && <p className={styles.stateError}>{errorMsg}</p>}
       {!errorMsg && products.length === 0 && (
@@ -186,37 +191,39 @@ export default function CatalogSection({ onAddToCart }) {
         })}
       </div>
 
-      {/* Botón debajo del catálogo (por ahora NO hace nada) */}
+      {/* Botón debajo del catálogo */}
       <div className={styles.bottomRow}>
         <button
           className={styles.viewAllBtn}
           type="button"
           onClick={() => navigate("/catalogo")}
-          aria-label="Ver catálogo completo (próximamente)"
+          aria-label="Ver catálogo completo"
         >
           Ver catálogo completo
         </button>
       </div>
 
-      <h3 id="bolsos" className={styles.title}>BOLSOS</h3>
+      <h3 id="bolsos" className={styles.title}>
+        BOLSOS
+      </h3>
       <p className={styles.description}>Próximamente disponibles.</p>
 
-      {/* MODAL / LIGHTBOX */}
+      {/* ===== MODAL / LIGHTBOX (idéntico al de CatalogPage) ===== */}
       {open && (
         <>
           <div
-            className={styles.modal}
+            className={styles.catalogModal}
             role="dialog"
             aria-modal="true"
             aria-label="Vista del producto"
           >
-            <div className={styles.modalCard}>
-              <div className={styles.modalHead}>
-                <strong className={styles.modalTitle}>
+            <div className={styles.catalogModalCard}>
+              <div className={styles.catalogModalHead}>
+                <strong className={styles.catalogModalTitle}>
                   {activeProduct?.title}
                 </strong>
                 <button
-                  className={styles.modalClose}
+                  className={styles.catalogModalClose}
                   onClick={closeProduct}
                   aria-label="Cerrar"
                   type="button"
@@ -225,19 +232,19 @@ export default function CatalogSection({ onAddToCart }) {
                 </button>
               </div>
 
-              <div className={styles.modalMedia}>
+              <div className={styles.catalogModalMedia}>
                 {bigUrl ? (
                   <img
-                    className={styles.modalImg}
+                    className={styles.catalogModalImg}
                     src={bigUrl}
                     alt={activeProduct?.title || "Producto"}
                   />
                 ) : (
-                  <div className={styles.modalNoImg}>Sin imagen</div>
+                  <div className={styles.catalogModalNoImg}>Sin imagen</div>
                 )}
 
                 <button
-                  className={styles.navLeft}
+                  className={styles.catalogNavLeft}
                   onClick={() => setActiveIndex((i) => Math.max(0, i - 1))}
                   aria-label="Anterior"
                   disabled={safeIndex <= 0}
@@ -246,7 +253,7 @@ export default function CatalogSection({ onAddToCart }) {
                   ‹
                 </button>
                 <button
-                  className={styles.navRight}
+                  className={styles.catalogNavRight}
                   onClick={() => setActiveIndex((i) => Math.min(maxIndex, i + 1))}
                   aria-label="Siguiente"
                   disabled={safeIndex >= maxIndex}
@@ -256,24 +263,54 @@ export default function CatalogSection({ onAddToCart }) {
                 </button>
               </div>
 
-              <div className={styles.modalBody}>
-                <p className={styles.modalDesc}>
+              <div className={styles.catalogModalBody}>
+                <p className={styles.catalogModalDesc}>
                   {activeProduct?.description || "Descripción pendiente."}
                 </p>
 
-                <p className={styles.modalPrice}>
+                <p className={styles.catalogModalPrice}>
                   <span>Precio:</span>{" "}
                   <strong>
                     {formatCOP(activeProduct?.price)}{" "}
                     {activeProduct?.price ? "COP" : ""}
                   </strong>
                 </p>
+
+                <div className={styles.catalogModalActions}>
+                  <button
+                    className={styles.catalogModalBtn}
+                    type="button"
+                    disabled={activeProduct?.available === false}
+                    onClick={() => {
+                      const first = activeProduct?.images?.[0]?.asset?.url || "";
+                      onAddToCart?.({
+                        id: activeProduct?._id,
+                        title: activeProduct?.title,
+                        image: first,
+                        price: activeProduct?.price ?? null,
+                      });
+                      closeProduct();
+                    }}
+                  >
+                    {activeProduct?.available === false
+                      ? "Agotado"
+                      : "Añadir al carrito"}
+                  </button>
+
+                  <button
+                    className={styles.catalogModalGhost}
+                    type="button"
+                    onClick={closeProduct}
+                  >
+                    Seguir viendo
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
           <button
-            className={styles.backdrop}
+            className={styles.catalogBackdrop}
             onClick={closeProduct}
             aria-label="Cerrar vista"
             type="button"

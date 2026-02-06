@@ -1,3 +1,4 @@
+// CatalogPage.jsx
 import { useEffect, useMemo, useState } from "react";
 import { sanity } from "../../sanityClient";
 import "./CatalogPage.css";
@@ -12,6 +13,11 @@ export default function CatalogPage({ onAddToCart }) {
   const [type, setType] = useState("all"); // all | cap | bag
   const [maxPrice, setMaxPrice] = useState(0); // set after load
   const [page, setPage] = useState(1);
+
+  // ===== Modal (lightbox) — igual al landing =====
+  const [open, setOpen] = useState(false);
+  const [activeProduct, setActiveProduct] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     sanity
@@ -104,6 +110,39 @@ export default function CatalogPage({ onAddToCart }) {
   };
 
   const maxShown = Number(maxPrice || 0);
+
+  // ===== Modal helpers (igual al landing) =====
+  const openProduct = (p) => {
+    setActiveProduct(p);
+    setActiveIndex(0);
+    setOpen(true);
+  };
+
+  const closeProduct = () => {
+    setOpen(false);
+    setActiveProduct(null);
+    setActiveIndex(0);
+  };
+
+  // cerrar con ESC + flechas
+  useEffect(() => {
+    if (!open) return;
+
+    const onKey = (e) => {
+      if (e.key === "Escape") closeProduct();
+      if (e.key === "ArrowRight") setActiveIndex((i) => i + 1);
+      if (e.key === "ArrowLeft") setActiveIndex((i) => Math.max(0, i - 1));
+    };
+
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  const activeImages = activeProduct?.images || [];
+  const maxIndex = Math.max(0, activeImages.length - 1);
+  const safeIndex = Math.min(activeIndex, maxIndex);
+  const bigUrl = activeImages?.[safeIndex]?.asset?.url;
 
   return (
     <main className="catalogPage">
@@ -223,11 +262,19 @@ export default function CatalogPage({ onAddToCart }) {
               return (
                 <article key={p._id} className="catalogCard" role="listitem">
                   <div className="catalogMedia">
-                    {url ? (
-                      <img className="catalogImg" src={url} alt={p.title} loading="lazy" />
-                    ) : (
-                      <div className="catalogNoImg">Sin imagen</div>
-                    )}
+                    {/* SOLO IMAGEN abre modal (igual al landing) */}
+                    <button
+                      className="catalogImgBtn"
+                      type="button"
+                      onClick={() => openProduct(p)}
+                      aria-label={`Ver ${p.title} en grande`}
+                    >
+                      {url ? (
+                        <img className="catalogImg" src={url} alt={p.title} loading="lazy" />
+                      ) : (
+                        <div className="catalogNoImg">Sin imagen</div>
+                      )}
+                    </button>
                   </div>
 
                   <div className="catalogBody">
@@ -328,6 +375,112 @@ export default function CatalogPage({ onAddToCart }) {
           </div>
         </div>
       </section>
+
+      {/* ===== MODAL / LIGHTBOX (igual al landing) ===== */}
+      {open && (
+        <>
+          <div
+            className="catalogModal"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Vista del producto"
+          >
+            <div className="catalogModalCard">
+              <div className="catalogModalHead">
+                <strong className="catalogModalTitle">{activeProduct?.title}</strong>
+                <button
+                  className="catalogModalClose"
+                  onClick={closeProduct}
+                  aria-label="Cerrar"
+                  type="button"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="catalogModalMedia">
+                {bigUrl ? (
+                  <img
+                    className="catalogModalImg"
+                    src={bigUrl}
+                    alt={activeProduct?.title || "Producto"}
+                  />
+                ) : (
+                  <div className="catalogModalNoImg">Sin imagen</div>
+                )}
+
+                <button
+                  className="catalogNavLeft"
+                  onClick={() => setActiveIndex((i) => Math.max(0, i - 1))}
+                  aria-label="Anterior"
+                  disabled={safeIndex <= 0}
+                  type="button"
+                >
+                  ‹
+                </button>
+                <button
+                  className="catalogNavRight"
+                  onClick={() => setActiveIndex((i) => Math.min(maxIndex, i + 1))}
+                  aria-label="Siguiente"
+                  disabled={safeIndex >= maxIndex}
+                  type="button"
+                >
+                  ›
+                </button>
+              </div>
+
+              <div className="catalogModalBody">
+                <p className="catalogModalDesc">
+                  {activeProduct?.description || "Descripción pendiente."}
+                </p>
+
+                <p className="catalogModalPrice">
+                  <span>Precio:</span>{" "}
+                  <strong>
+                    {formatCOP(activeProduct?.price)}{" "}
+                    {activeProduct?.price ? "COP" : ""}
+                  </strong>
+                </p>
+
+                <div className="catalogModalActions">
+                  <button
+                    className="catalogModalBtn"
+                    type="button"
+                    disabled={activeProduct?.available === false}
+                    onClick={() => {
+                      const first = activeProduct?.images?.[0]?.asset?.url || "";
+                      onAddToCart?.({
+                        id: activeProduct?._id,
+                        title: activeProduct?.title,
+                        image: first,
+                        price: activeProduct?.price ?? null,
+                      });
+                      closeProduct();
+                    }}
+                  >
+                    {activeProduct?.available === false ? "Agotado" : "Añadir al carrito"}
+                  </button>
+
+                  <button
+                    className="catalogModalGhost"
+                    type="button"
+                    onClick={closeProduct}
+                  >
+                    Seguir viendo
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button
+            className="catalogBackdrop"
+            onClick={closeProduct}
+            aria-label="Cerrar vista"
+            type="button"
+          />
+        </>
+      )}
     </main>
   );
 }
