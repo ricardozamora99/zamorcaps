@@ -30,6 +30,11 @@ html, body{
   background: var(--page);
 }
 
+html{
+  scroll-behavior: smooth;
+}
+
+
 body{
   margin: 0;
   padding-top: 115px; /* navbar fijo */

@@ -186,6 +186,37 @@
   font-weight: 900;
   margin-right: 6px;
 }
+.priceValue{
+  color: rgba(0,0,0,0.82);
+  font-weight: 1000;
+}
+
+/* ===== NUEVO: Botón Ver catálogo completo ===== */
+.bottomRow{
+  display: flex;
+  justify-content: center;
+  margin: 8px 0 18px;
+}
+
+.viewAllBtn{
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(203,14,14,0.26);
+  background: rgba(255,255,255,0.92);
+  color: #cb0e0e;
+  font-weight: 1000;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.06);
+  transition: transform 160ms ease, filter 160ms ease, background 160ms ease;
+}
+.viewAllBtn:hover{
+  background: rgba(203,14,14,0.06);
+  transform: translateY(-1px);
+}
+.viewAllBtn:active{
+  transform: translateY(0px);
+}
 
 .actions{
   display: flex;

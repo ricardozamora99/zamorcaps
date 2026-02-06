@@ -1,11 +1,13 @@
+import { useNavigate } from "react-router-dom";
 import gorraMain from "../../Images/gorraMain.png";
 import styles from "./HeroSection.module.css";
 
 export default function HeroSection({ closeMenu }) {
+  const navigate = useNavigate();
+
   return (
     <section id="inicio" className={styles.section}>
       <div className={styles.container}>
-        {/* LEFT */}
         <div className={styles.content}>
           <p className={styles.kicker}>ZAMOR CAPS • GORRAS PREMIUM • COLOMBIA</p>
 
@@ -21,15 +23,16 @@ export default function HeroSection({ closeMenu }) {
           </p>
 
           <div className={styles.ctas}>
-            <a
-              href="https://drive.google.com/drive/folders/19QsZ9V0THpxjEcf9RHdYEYg8-zgPJx3h?usp=sharing"
+            <button
+              type="button"
               className={styles.btnPrimary}
-              target="_blank"
-              rel="noreferrer"
-              onClick={closeMenu}
+              onClick={() => {
+                closeMenu?.();
+                navigate("/catalogo");
+              }}
             >
               VER CATÁLOGO
-            </a>
+            </button>
 
             <a href="#catalogo" className={styles.btnGhost} onClick={closeMenu}>
               Ver productos
@@ -43,7 +46,6 @@ export default function HeroSection({ closeMenu }) {
           </div>
         </div>
 
-        {/* RIGHT */}
         <div className={styles.visual}>
           <img
             src={gorraMain}

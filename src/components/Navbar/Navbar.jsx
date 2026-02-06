@@ -3,6 +3,9 @@ import zamorLogo from "../../Images/logo ZAMOR CAPSnoBG.png";
 import styles from "./Navbar.module.css";
 
 export default function Navbar({
+  // NEW
+  variant = "home", // "home" | "catalog"
+
   menuOpen,
   catalogOpen,
   closeMenu,
@@ -21,7 +24,9 @@ export default function Navbar({
 }) {
   const closeTimerRef = useRef(null);
 
-  // ===== NEW: scroll hide/show =====
+  const isCatalogVariant = variant === "catalog";
+
+  // ===== scroll hide/show =====
   const lastYRef = useRef(0);
   const tickingRef = useRef(false);
   const hiddenRef = useRef(false);
@@ -51,21 +56,20 @@ export default function Navbar({
     };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
-  }, []);
+  }, [setCartOpen]);
 
-  // ===== NEW: scroll logic (hide on down, show on up) =====
+  // ===== scroll logic (hide on down, show on up) =====
   useEffect(() => {
     const el = document.querySelector(`.${styles.navbar}`);
     if (!el) return;
 
-    // initial
     lastYRef.current = window.scrollY || 0;
     el.classList.remove(styles.navHidden);
     hiddenRef.current = false;
 
-    const TOP_LOCK = 10;        // siempre visible cerca del top
-    const HIDE_AFTER = 80;      // no ocultar si aún estás muy arriba
-    const DELTA = 8;            // umbral para evitar parpadeo
+    const TOP_LOCK = 10;
+    const HIDE_AFTER = 80;
+    const DELTA = 8;
 
     const apply = () => {
       tickingRef.current = false;
@@ -84,7 +88,6 @@ export default function Navbar({
       const lastY = lastYRef.current;
       const diff = y - lastY;
 
-      // near top: siempre visible
       if (y <= TOP_LOCK) {
         if (hiddenRef.current) {
           el.classList.remove(styles.navHidden);
@@ -94,19 +97,14 @@ export default function Navbar({
         return;
       }
 
-      // umbral anti-jitter
-      if (Math.abs(diff) < DELTA) {
-        return;
-      }
+      if (Math.abs(diff) < DELTA) return;
 
-      // scroll down => hide (pero solo si ya bajaste un poco)
       if (diff > 0) {
         if (y > HIDE_AFTER && !hiddenRef.current) {
           el.classList.add(styles.navHidden);
           hiddenRef.current = true;
         }
       } else {
-        // scroll up => show
         if (hiddenRef.current) {
           el.classList.remove(styles.navHidden);
           hiddenRef.current = false;
@@ -133,7 +131,7 @@ export default function Navbar({
         <nav className={styles.wrap}>
           {/* LEFT: Brand */}
           <a
-            href="#inicio"
+            href={isCatalogVariant ? "/#inicio" : "#inicio"}
             className={styles.brand}
             aria-label="Inicio"
             onClick={closeAll}
@@ -147,40 +145,13 @@ export default function Navbar({
 
           {/* RIGHT: Actions */}
           <div className={styles.actions}>
-            {/* Desktop links */}
-            <ul className={styles.menu}>
-              <li
-                className={`${styles.dropdown} ${
-                  catalogOpen ? styles.dropdownOpen : ""
-                }`}
-                onMouseEnter={() => {
-                  if (window.innerWidth > 900) openCatalog();
-                }}
-                onMouseLeave={() => {
-                  if (window.innerWidth > 900) scheduleCloseCatalog();
-                }}
-              >
-                <a
-                  href="#catalogo"
-                  className={styles.catalogLink}
-                  onClick={() => {
-                    setCartOpen(false);
-                    closeMenu();
-                    setCatalogOpen(false);
-                  }}
-                >
-                  Catálogo
-                  <span
-                    className={`${styles.chev} ${
-                      catalogOpen ? styles.chevUp : ""
-                    }`}
-                  >
-                    ▾
-                  </span>
-                </a>
-
-                <ul
-                  className={styles.dropdownMenu}
+            {/* Desktop links (ONLY in home) */}
+            {!isCatalogVariant && (
+              <ul className={styles.menu}>
+                <li
+                  className={`${styles.dropdown} ${
+                    catalogOpen ? styles.dropdownOpen : ""
+                  }`}
                   onMouseEnter={() => {
                     if (window.innerWidth > 900) openCatalog();
                   }}
@@ -188,105 +159,133 @@ export default function Navbar({
                     if (window.innerWidth > 900) scheduleCloseCatalog();
                   }}
                 >
-                  <li>
-                    <a href="#gorras" onClick={closeAll}>
-                      Gorras
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#bolsos" onClick={closeAll}>
-                      Bolsos
-                    </a>
-                  </li>
-                </ul>
-              </li>
+                  <a
+                    href="#catalogo"
+                    className={styles.catalogLink}
+                    onClick={() => {
+                      setCartOpen(false);
+                      closeMenu();
+                      setCatalogOpen(false);
+                    }}
+                  >
+                    Catálogo
+                    <span
+                      className={`${styles.chev} ${
+                        catalogOpen ? styles.chevUp : ""
+                      }`}
+                    >
+                      ▾
+                    </span>
+                  </a>
 
-              <li>
-                <a href="#recomendaciones" onClick={closeAll}>
-                  Recomendaciones
-                </a>
-              </li>
-              <li>
-                <a href="#como-comprar" onClick={closeAll}>
-                  Cómo comprar
-                </a>
-              </li>
-              <li>
-                <a href="#contacto" onClick={closeAll}>
-                  Contacto
-                </a>
-              </li>
-            </ul>
+                  <ul
+                    className={styles.dropdownMenu}
+                    onMouseEnter={() => {
+                      if (window.innerWidth > 900) openCatalog();
+                    }}
+                    onMouseLeave={() => {
+                      if (window.innerWidth > 900) scheduleCloseCatalog();
+                    }}
+                  >
+                    <li>
+                      <a href="#gorras" onClick={closeAll}>
+                        Gorras
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#bolsos" onClick={closeAll}>
+                        Bolsos
+                      </a>
+                    </li>
+                  </ul>
+                </li>
 
-            {/* Cart button */}
+                <li>
+                  <a href="#recomendaciones" onClick={closeAll}>
+                    Recomendaciones
+                  </a>
+                </li>
+                <li>
+                  <a href="#como-comprar" onClick={closeAll}>
+                    Cómo comprar
+                  </a>
+                </li>
+                <li>
+                  <a href="#contacto" onClick={closeAll}>
+                    Contacto
+                  </a>
+                </li>
+              </ul>
+            )}
+
+            {/* Cart button (always) */}
             <button
               className={styles.cartBtn}
               type="button"
               aria-label="Abrir carrito"
               aria-expanded={cartOpen}
-              onClick={() => setCartOpen((v) => !v)}
+              onClick={() => {
+                // si estás en variant catalog, asegúrate que el menú móvil esté cerrado
+                if (isCatalogVariant) {
+                  setMenuOpen?.(false);
+                  setCatalogOpen?.(false);
+                }
+                setCartOpen((v) => !v);
+              }}
             >
               <span className={styles.cartIcon} aria-hidden="true">
                 🛒
               </span>
               <span className={styles.cartText}>Carrito</span>
-              <span
-                className={styles.cartBadge}
-                aria-label={`${cartCount} items`}
-              >
+              <span className={styles.cartBadge} aria-label={`${cartCount} items`}>
                 {cartCount}
               </span>
             </button>
 
-            {/* Mobile hamburger */}
-            <button
-              className={styles.toggle}
-              type="button"
-              aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
-              aria-expanded={menuOpen}
-              onClick={() => {
-                setMenuOpen((v) => {
-                  const next = !v;
-                  if (!next) setCatalogOpen(false);
-                  return next;
-                });
-                setCartOpen(false);
-              }}
-            >
-              {menuOpen ? "✕" : "☰"}
-            </button>
+            {/* Mobile hamburger (ONLY in home) */}
+            {!isCatalogVariant && (
+              <button
+                className={styles.toggle}
+                type="button"
+                aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+                aria-expanded={menuOpen}
+                onClick={() => {
+                  setMenuOpen((v) => {
+                    const next = !v;
+                    if (!next) setCatalogOpen(false);
+                    return next;
+                  });
+                  setCartOpen(false);
+                }}
+              >
+                {menuOpen ? "✕" : "☰"}
+              </button>
+            )}
           </div>
         </nav>
       </div>
 
-      {/* Mobile menu panel */}
-      <div
-        className={`${styles.mobilePanel} ${
-          menuOpen ? styles.mobileOpen : ""
-        }`}
-      >
-        <a href="#gorras" onClick={closeAll}>
-          Gorras
-        </a>
-        <a href="#bolsos" onClick={closeAll}>
-          Bolsos
-        </a>
-        <a href="#recomendaciones" onClick={closeAll}>
-          Recomendaciones
-        </a>
-        <a href="#como-comprar" onClick={closeAll}>
-          Cómo comprar
-        </a>
-        <a href="#contacto" onClick={closeAll}>
-          Contacto
-        </a>
-      </div>
+      {/* Mobile menu panel (ONLY in home) */}
+      {!isCatalogVariant && (
+        <div className={`${styles.mobilePanel} ${menuOpen ? styles.mobileOpen : ""}`}>
+          <a href="#gorras" onClick={closeAll}>Gorras</a>
+          <a href="#bolsos" onClick={closeAll}>Bolsos</a>
+          <a href="#recomendaciones" onClick={closeAll}>Recomendaciones</a>
+          <a href="#como-comprar" onClick={closeAll}>Cómo comprar</a>
+          <a href="#contacto" onClick={closeAll}>Contacto</a>
+        </div>
+      )}
 
-      {/* Cart panel */}
+      {/* Cart panel (always) */}
       <aside className={`${styles.cartPanel} ${cartOpen ? styles.cartOpen : ""}`}>
         <div className={styles.cartHead}>
           <strong>Tu carrito</strong>
-          <button className={styles.cartClose} onClick={() => setCartOpen(false)}>
+          <button
+            className={styles.cartClose}
+            type="button"
+            onClick={() => setCartOpen(false)}
+            aria-label="Cerrar carrito"
+          >
             ✕
           </button>
         </div>
@@ -302,11 +301,7 @@ export default function Navbar({
               {cartItems.map((it) => (
                 <div key={it.id} className={styles.cartItem}>
                   <div className={styles.cartThumb}>
-                    {it.image ? (
-                      <img src={it.image} alt={it.title} />
-                    ) : (
-                      <div className={styles.cartNoImg}>—</div>
-                    )}
+                    {it.image ? <img src={it.image} alt={it.title} /> : <div className={styles.cartNoImg}>—</div>}
                   </div>
 
                   <div className={styles.cartMeta}>
@@ -317,6 +312,7 @@ export default function Navbar({
                   <div className={styles.cartQty}>
                     <button
                       className={styles.qtyBtn}
+                      type="button"
                       onClick={() => setQty(it.id, (it.qty || 1) - 1)}
                       aria-label={`Restar cantidad de ${it.title}`}
                     >
@@ -327,6 +323,7 @@ export default function Navbar({
 
                     <button
                       className={styles.qtyBtn}
+                      type="button"
                       onClick={() => setQty(it.id, (it.qty || 1) + 1)}
                       aria-label={`Sumar cantidad de ${it.title}`}
                     >
@@ -336,6 +333,7 @@ export default function Navbar({
 
                   <button
                     className={styles.cartRemove}
+                    type="button"
                     onClick={() => removeFromCart(it.id)}
                     aria-label={`Quitar ${it.title} del carrito`}
                   >
@@ -350,12 +348,12 @@ export default function Navbar({
         <div className={styles.cartFoot}>
           <a
             className={styles.cartCTA}
-            href={cartItems.length ? buildWhatsAppUrl() : "#catalogo"}
+            href={cartItems.length ? buildWhatsAppUrl() : (isCatalogVariant ? "/catalogo" : "#catalogo")}
             onClick={() => {
               if (cartItems.length) closeAll();
             }}
-            target="_blank"
-            rel="noreferrer"
+            target={cartItems.length ? "_blank" : undefined}
+            rel={cartItems.length ? "noreferrer" : undefined}
           >
             {cartItems.length ? "Preguntar precio por WhatsApp" : "Ir al catálogo"}
           </a>
@@ -367,6 +365,7 @@ export default function Navbar({
         className={`${styles.backdrop} ${cartOpen ? styles.backdropOn : ""}`}
         aria-label="Cerrar carrito"
         onClick={() => setCartOpen(false)}
+        type="button"
       />
     </header>
   );

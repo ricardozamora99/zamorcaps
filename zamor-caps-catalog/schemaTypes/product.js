@@ -38,10 +38,21 @@ export default {
         ],
         layout: "radio", // se ve como botones (radio)
       },
+      
 
       // Regla: obligatorio
       validation: (Rule) => Rule.required(),
     },
+        {
+      name: "price",
+      title: "Precio (COP)",
+      type: "number",
+      validation: (Rule) =>
+        Rule.required()
+          .min(0)
+          .error("Pon un precio válido (>= 0)"),
+    },
+
 
     {
       name: "description",

@@ -1,7 +1,9 @@
 import "./App.css";
 import { useEffect, useMemo, useState } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar/Navbar";
+
 import HeroSection from "./sections/Hero/HeroSection";
 import AboutSection from "./sections/About/AboutSection";
 import CatalogSection from "./sections/Catalog/CatalogSection";
@@ -10,18 +12,21 @@ import HowToBuySection from "./sections/HowToBuy/HowToBuySection";
 import ContactSection from "./sections/Contact/ContactSection";
 import Footer from "./components/Footer/Footer";
 
-// PON AQUÍ TU NÚMERO (formato internacional sin + ni espacios)
-// Colombia ejemplo: 573001112233
+import CatalogPage from "./pages/Catalog/CatalogPage";
+
 const WHATSAPP_NUMBER = "573157270599";
 
 export default function App() {
+  const { pathname } = useLocation();
+  const isCatalogPage = pathname === "/catalogo";
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [catalogOpen, setCatalogOpen] = useState(false);
 
-  // Carrito (wishlist) global
+  // Carrito global
   const [cartOpen, setCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]); 
-  // cartItems: [{ id, title, image, qty }]
+  const [cartItems, setCartItems] = useState([]);
+  // cartItems: [{ id, title, image, qty, price? }]
 
   const closeMenu = () => {
     setMenuOpen(false);
@@ -50,7 +55,7 @@ export default function App() {
   );
 
   const addToCart = (product) => {
-    // product: { id, title, image }
+    // product: { id, title, image, price? }
     setCartItems((prev) => {
       const idx = prev.findIndex((x) => x.id === product.id);
       if (idx >= 0) {
@@ -94,6 +99,7 @@ export default function App() {
   return (
     <>
       <Navbar
+        variant={isCatalogPage ? "catalog" : "home"}
         menuOpen={menuOpen}
         catalogOpen={catalogOpen}
         closeMenu={closeMenu}
@@ -110,16 +116,26 @@ export default function App() {
         closeAll={closeAll}
       />
 
-      <main>
-        <HeroSection />
-        <AboutSection />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <main>
+              <HeroSection closeMenu={closeAll} />
+              <AboutSection />
+              <CatalogSection onAddToCart={addToCart} />
+              <RecommendationsSection />
+              <HowToBuySection />
+              <ContactSection />
+            </main>
+          }
+        />
 
-        <CatalogSection onAddToCart={addToCart} />
-
-        <RecommendationsSection />
-        <HowToBuySection />
-        <ContactSection />
-      </main>
+        <Route
+          path="/catalogo"
+          element={<CatalogPage onAddToCart={addToCart} />}
+        />
+      </Routes>
 
       <Footer />
     </>
