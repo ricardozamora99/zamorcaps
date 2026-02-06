@@ -1,19 +1,28 @@
 /* ====== NAVBAR (self-contained) ====== */
 
 .navbar{
-  position: fixed;   /* ✅ en vez de sticky */
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 9999;     /* ✅ por encima de todo */
+  z-index: 9999;
 
   background: rgba(255,255,255,0.78);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 
   border-bottom: 1px solid rgba(10,10,10,0.08);
+
+  /* NEW: smooth hide/show */
+  transition: transform 220ms ease, opacity 220ms ease;
+  will-change: transform;
 }
 
+/* NEW: hidden state */
+.navHidden{
+  transform: translateY(-110%);
+  opacity: 0.98;
+}
 
 /* container */
 .inner{
@@ -353,7 +362,7 @@
     position: fixed;
     left: 12px;
     right: 12px;
-    top: 78px; /* navbar height approx */
+    top: 78px;
     z-index: 100;
 
     background: rgba(255,255,255,0.98);
@@ -389,9 +398,10 @@
     color: rgba(203,14,14,1);
   }
 
-  .cartText{ display: none; } /* keep icon + badge on mobile */
+  .cartText{ display: none; }
 }
 
+/* ====== CART LIST ====== */
 .cartList{
   display: grid;
   gap: 12px;

@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import zamorLogo from "../../Images/logo ZAMOR CAPSnoBG.png";
 import styles from "./Navbar.module.css";
-
 
 export default function Navbar({
   menuOpen,
@@ -10,7 +9,7 @@ export default function Navbar({
   setMenuOpen,
   setCatalogOpen,
 
-  // NUEVO: carrito global
+  // carrito global
   cartOpen,
   setCartOpen,
   cartItems,
@@ -22,6 +21,11 @@ export default function Navbar({
 }) {
   const closeTimerRef = useRef(null);
 
+  // ===== NEW: scroll hide/show =====
+  const lastYRef = useRef(0);
+  const tickingRef = useRef(false);
+  const hiddenRef = useRef(false);
+
   const openCatalog = () => {
     if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
     setCatalogOpen(true);
@@ -29,7 +33,7 @@ export default function Navbar({
 
   const scheduleCloseCatalog = () => {
     if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
-    closeTimerRef.current = setTimeout(() => setCatalogOpen(false), 200); // 1 second
+    closeTimerRef.current = setTimeout(() => setCatalogOpen(false), 200);
   };
 
   useEffect(() => {
@@ -37,8 +41,6 @@ export default function Navbar({
       if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
     };
   }, []);
-
-
 
   // Close cart when resizing to desktop if you want
   useEffect(() => {
@@ -51,7 +53,79 @@ export default function Navbar({
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  // ===== NEW: scroll logic (hide on down, show on up) =====
+  useEffect(() => {
+    const el = document.querySelector(`.${styles.navbar}`);
+    if (!el) return;
 
+    // initial
+    lastYRef.current = window.scrollY || 0;
+    el.classList.remove(styles.navHidden);
+    hiddenRef.current = false;
+
+    const TOP_LOCK = 10;        // siempre visible cerca del top
+    const HIDE_AFTER = 80;      // no ocultar si aún estás muy arriba
+    const DELTA = 8;            // umbral para evitar parpadeo
+
+    const apply = () => {
+      tickingRef.current = false;
+
+      // si hay UI abierta, no ocultar
+      if (menuOpen || cartOpen) {
+        if (hiddenRef.current) {
+          el.classList.remove(styles.navHidden);
+          hiddenRef.current = false;
+        }
+        lastYRef.current = window.scrollY || 0;
+        return;
+      }
+
+      const y = window.scrollY || 0;
+      const lastY = lastYRef.current;
+      const diff = y - lastY;
+
+      // near top: siempre visible
+      if (y <= TOP_LOCK) {
+        if (hiddenRef.current) {
+          el.classList.remove(styles.navHidden);
+          hiddenRef.current = false;
+        }
+        lastYRef.current = y;
+        return;
+      }
+
+      // umbral anti-jitter
+      if (Math.abs(diff) < DELTA) {
+        return;
+      }
+
+      // scroll down => hide (pero solo si ya bajaste un poco)
+      if (diff > 0) {
+        if (y > HIDE_AFTER && !hiddenRef.current) {
+          el.classList.add(styles.navHidden);
+          hiddenRef.current = true;
+        }
+      } else {
+        // scroll up => show
+        if (hiddenRef.current) {
+          el.classList.remove(styles.navHidden);
+          hiddenRef.current = false;
+        }
+      }
+
+      lastYRef.current = y;
+    };
+
+    const onScroll = () => {
+      if (!tickingRef.current) {
+        tickingRef.current = true;
+        window.requestAnimationFrame(apply);
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [menuOpen, cartOpen, styles.navbar, styles.navHidden]);
 
   return (
     <header className={styles.navbar}>
@@ -76,7 +150,9 @@ export default function Navbar({
             {/* Desktop links */}
             <ul className={styles.menu}>
               <li
-                className={`${styles.dropdown} ${catalogOpen ? styles.dropdownOpen : ""}`}
+                className={`${styles.dropdown} ${
+                  catalogOpen ? styles.dropdownOpen : ""
+                }`}
                 onMouseEnter={() => {
                   if (window.innerWidth > 900) openCatalog();
                 }}
@@ -84,22 +160,25 @@ export default function Navbar({
                   if (window.innerWidth > 900) scheduleCloseCatalog();
                 }}
               >
-                {/* CLICK goes to #catalogo */}
                 <a
                   href="#catalogo"
                   className={styles.catalogLink}
-                  onClick={(e) => {
-                    // close other UI (mobile menu/cart) but DO NOT prevent scroll
+                  onClick={() => {
                     setCartOpen(false);
                     closeMenu();
                     setCatalogOpen(false);
                   }}
                 >
                   Catálogo
-                  <span className={`${styles.chev} ${catalogOpen ? styles.chevUp : ""}`}>▾</span>
+                  <span
+                    className={`${styles.chev} ${
+                      catalogOpen ? styles.chevUp : ""
+                    }`}
+                  >
+                    ▾
+                  </span>
                 </a>
 
-                {/* Dropdown stays open while hovering it */}
                 <ul
                   className={styles.dropdownMenu}
                   onMouseEnter={() => {
@@ -110,14 +189,17 @@ export default function Navbar({
                   }}
                 >
                   <li>
-                    <a href="#gorras" onClick={closeAll}>Gorras</a>
+                    <a href="#gorras" onClick={closeAll}>
+                      Gorras
+                    </a>
                   </li>
                   <li>
-                    <a href="#bolsos" onClick={closeAll}>Bolsos</a>
+                    <a href="#bolsos" onClick={closeAll}>
+                      Bolsos
+                    </a>
                   </li>
                 </ul>
               </li>
-
 
               <li>
                 <a href="#recomendaciones" onClick={closeAll}>
@@ -136,7 +218,7 @@ export default function Navbar({
               </li>
             </ul>
 
-            {/* Cart button (works on desktop + mobile) */}
+            {/* Cart button */}
             <button
               className={styles.cartBtn}
               type="button"
@@ -144,9 +226,14 @@ export default function Navbar({
               aria-expanded={cartOpen}
               onClick={() => setCartOpen((v) => !v)}
             >
-              <span className={styles.cartIcon} aria-hidden="true">🛒</span>
+              <span className={styles.cartIcon} aria-hidden="true">
+                🛒
+              </span>
               <span className={styles.cartText}>Carrito</span>
-              <span className={styles.cartBadge} aria-label={`${cartCount} items`}>
+              <span
+                className={styles.cartBadge}
+                aria-label={`${cartCount} items`}
+              >
                 {cartCount}
               </span>
             </button>
@@ -173,12 +260,26 @@ export default function Navbar({
       </div>
 
       {/* Mobile menu panel */}
-      <div className={`${styles.mobilePanel} ${menuOpen ? styles.mobileOpen : ""}`}>
-        <a href="#gorras" onClick={closeAll}>Gorras</a>
-        <a href="#bolsos" onClick={closeAll}>Bolsos</a>
-        <a href="#recomendaciones" onClick={closeAll}>Recomendaciones</a>
-        <a href="#como-comprar" onClick={closeAll}>Cómo comprar</a>
-        <a href="#contacto" onClick={closeAll}>Contacto</a>
+      <div
+        className={`${styles.mobilePanel} ${
+          menuOpen ? styles.mobileOpen : ""
+        }`}
+      >
+        <a href="#gorras" onClick={closeAll}>
+          Gorras
+        </a>
+        <a href="#bolsos" onClick={closeAll}>
+          Bolsos
+        </a>
+        <a href="#recomendaciones" onClick={closeAll}>
+          Recomendaciones
+        </a>
+        <a href="#como-comprar" onClick={closeAll}>
+          Cómo comprar
+        </a>
+        <a href="#contacto" onClick={closeAll}>
+          Contacto
+        </a>
       </div>
 
       {/* Cart panel */}
@@ -246,23 +347,22 @@ export default function Navbar({
           )}
         </div>
 
-
-      <div className={styles.cartFoot}>
-        <a
-          className={styles.cartCTA}
-          href={cartItems.length ? buildWhatsAppUrl() : "#catalogo"}
-          onClick={() => {
-            if (cartItems.length) closeAll();
-          }}
-          target="_blank"
-          rel="noreferrer"
-        >
-          {cartItems.length ? "Preguntar precio por WhatsApp" : "Ir al catálogo"}
-        </a>
-      </div>
+        <div className={styles.cartFoot}>
+          <a
+            className={styles.cartCTA}
+            href={cartItems.length ? buildWhatsAppUrl() : "#catalogo"}
+            onClick={() => {
+              if (cartItems.length) closeAll();
+            }}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {cartItems.length ? "Preguntar precio por WhatsApp" : "Ir al catálogo"}
+          </a>
+        </div>
       </aside>
 
-      {/* Backdrop for cart (click to close) */}
+      {/* Backdrop for cart */}
       <button
         className={`${styles.backdrop} ${cartOpen ? styles.backdropOn : ""}`}
         aria-label="Cerrar carrito"
