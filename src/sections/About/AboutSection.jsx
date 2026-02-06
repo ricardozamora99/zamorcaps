@@ -2,43 +2,62 @@ import styles from "./AboutSection.module.css";
 
 export default function AboutSection() {
   return (
-    <section className={`section ${styles.about}`} id="about">
-      <div className={styles.head}>
-        <h2>Sobre Zamor Caps</h2>
-        <p className={styles.sub}>
-          Gorras premium hechas en Colombia. Diseños exclusivos, materiales de calidad y atención rápida por WhatsApp.
-        </p>
-      </div>
+    <section
+      className={`section ${styles.about}`}
+      id="about"
+      aria-labelledby="about-title"
+    >
+      <div className={styles.inner}>
+        <header className={styles.head}>
+          <p className={styles.kicker}>Zamor Caps</p>
 
-      <div className={styles.grid}>
-        <article className={styles.card}>
-          <div className={styles.icon}>🔥</div>
-          <h3>Diseño que destaca</h3>
-          <p>Colecciones con estilo único: bordados, colores y detalles que se notan.</p>
-        </article>
+          <h2 id="about-title" className={styles.title}>
+            Gorras premium hechas en Colombia
+          </h2>
 
-        <article className={styles.card}>
-          <div className={styles.icon}>🧵</div>
-          <h3>Calidad real</h3>
-          <p>Materiales premium y acabados cuidados. Una gorra que dura y se siente bien.</p>
-        </article>
+          <p className={styles.sub}>
+            Diseños exclusivos, materiales de calidad y atención rápida por WhatsApp.
+            Compra simple, respuesta rápida y entregas coordinadas.
+          </p>
+        </header>
 
-        <article className={styles.card}>
-          <div className={styles.icon}>⚡</div>
-          <h3>Compra fácil</h3>
-          <p>Pides por WhatsApp, confirmamos disponibilidad y coordinamos entrega/envío.</p>
-        </article>
-      </div>
+        <div className={styles.grid} role="list">
+          <article className={styles.card} role="listitem">
+            <div className={styles.icon} aria-hidden="true">🔥</div>
+            <h3 className={styles.cardTitle}>Diseño que destaca</h3>
+            <p className={styles.cardText}>
+              Colecciones con estilo único: bordados, colores y detalles que se notan.
+            </p>
+          </article>
 
-      <div className={styles.strip}>
-        <div className={styles.stripLeft}>
-          <strong>¿Buscas algo en particular?</strong>
-          <span>Escríbenos y te asesoramos en minutos.</span>
+          <article className={styles.card} role="listitem">
+            <div className={styles.icon} aria-hidden="true">🧵</div>
+            <h3 className={styles.cardTitle}>Calidad real</h3>
+            <p className={styles.cardText}>
+              Materiales premium y acabados cuidados. Una gorra que dura y se siente bien.
+            </p>
+          </article>
+
+          <article className={styles.card} role="listitem">
+            <div className={styles.icon} aria-hidden="true">⚡</div>
+            <h3 className={styles.cardTitle}>Compra fácil</h3>
+            <p className={styles.cardText}>
+              Pides por WhatsApp, confirmamos disponibilidad y coordinamos entrega/envío.
+            </p>
+          </article>
         </div>
 
-        <a className={styles.stripBtn} href="#contacto">
-          Ir a contacto
-        </a>
+        <aside className={styles.strip} aria-label="Asesoría rápida">
+          <div className={styles.stripLeft}>
+            <p className={styles.stripTitle}>¿Buscas algo en particular?</p>
+            <p className={styles.stripSub}>Escríbenos y te asesoramos en minutos.</p>
+          </div>
+
+          <a className={styles.stripBtn} href="#contacto">
+            Ir a contacto
+            <span className={styles.btnArrow} aria-hidden="true">→</span>
+          </a>
+        </aside>
       </div>
     </section>
   );

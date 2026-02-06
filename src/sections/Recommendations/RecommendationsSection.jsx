@@ -3,203 +3,114 @@ import estilosGorras from "../../Images/estilosGorras.png";
 import styles from "./RecommendationsSection.module.css";
 
 export default function RecommendationsSection() {
-  const [reco, setReco] = useState("");
+  const [pick, setPick] = useState("");
 
   return (
     <section id="recomendaciones" className={`section ${styles.rec}`}>
-      <h2>RECOMENDACIONES</h2>
-      <p className={styles.sub}>Guía rápida para elegir tipo, talla y color.</p>
+      {/* ===== HERO / STATEMENT ===== */}
+      <header className={styles.head}>
+        <span className={styles.kicker}>Recomendaciones</span>
+        <h2 className={styles.title}>
+          Elige tu gorra <span>como un experto</span>
+        </h2>
+        <p className={styles.sub}>
+          Ajuste, estilo y comodidad. Te guiamos para que elijas la gorra perfecta.
+        </p>
+      </header>
 
-      <div className={styles.block}>
-        <h3>1) Elige tu tipo de gorra</h3>
+      {/* ===== TIPOS DE GORRA ===== */}
+      <div className={styles.types} role="list">
+        <article className={styles.typeCard} role="listitem">
+          <h3>Fitted</h3>
+          <p>Talla exacta, ajuste firme, look premium.</p>
+          <span className={styles.tag}>Precisión</span>
+        </article>
 
-        <div className={styles.cards}>
-          <article className={styles.card}>
-            <h4>Fitted (sellada)</h4>
-            <p>
-              <strong>Para quién:</strong> si quieres talla exacta.
-            </p>
-            <p>
-              <strong>Ajuste:</strong> talla en cm (exacta).
-            </p>
-            <p className={styles.tip}>
-              <strong>Tip:</strong> si estás entre dos tallas, sube 1.
-            </p>
-          </article>
+        <article className={styles.typeCard} role="listitem">
+          <h3>Snapback</h3>
+          <p>Ajustable, versátil y urbano.</p>
+          <span className={styles.tag}>Versátil</span>
+        </article>
 
-          <article className={styles.card}>
-            <h4>Snapback</h4>
-            <p>
-              <strong>Para quién:</strong> si prefieres ajustar fácil.
-            </p>
-            <p>
-              <strong>Ajuste:</strong> ajustable con broche.
-            </p>
-            <p className={styles.tip}>
-              <strong>Tip:</strong> ideal si es regalo o duda de talla.
-            </p>
-          </article>
+        <article className={styles.typeCard} role="listitem">
+          <h3>Strapback</h3>
+          <p>Ajuste cómodo para uso diario.</p>
+          <span className={styles.tag}>Confort</span>
+        </article>
 
-          <article className={styles.card}>
-            <h4>Strapback</h4>
-            <p>
-              <strong>Para quién:</strong> si buscas ajuste fino y cómodo.
-            </p>
-            <p>
-              <strong>Ajuste:</strong> ajustable con correa.
-            </p>
-            <p className={styles.tip}>
-              <strong>Tip:</strong> look más casual / diario.
-            </p>
-          </article>
-
-          <article className={styles.card}>
-            <h4>Trucker</h4>
-            <p>
-              <strong>Para quién:</strong> si quieres frescura.
-            </p>
-            <p>
-              <strong>Ajuste:</strong> normalmente ajustable.
-            </p>
-            <p className={styles.tip}>
-              <strong>Tip:</strong> perfecta para calor y verano.
-            </p>
-          </article>
-        </div>
+        <article className={styles.typeCard} role="listitem">
+          <h3>Trucker</h3>
+          <p>Más fresca, ideal para calor.</p>
+          <span className={styles.tag}>Verano</span>
+        </article>
       </div>
 
-      <img
-        src={estilosGorras}
-        alt="Tipos de gorra (parte trasera)"
-        className={styles.banner}
-      />
+      {/* ===== GUIDE PANEL (TU IMAGEN) ===== */}
+      <div className={styles.guide}>
+        <div className={styles.guideText}>
+          <h3 className={styles.guideTitle}>Guía visual rápida</h3>
+          <p className={styles.guideSub}>
+            Mira la parte trasera y el sistema de ajuste. Si es regalo o dudas de talla,
+            lo ajustable siempre gana.
+          </p>
 
-      <div className={styles.block}>
-        <h3>2) ¿Qué talla soy?</h3>
-
-        <div className={styles.sizeSteps}>
-          <div className={styles.sizeStep}>
-            <div className={styles.badge}>1</div>
-            <p>
-              <strong>Mide</strong> tu cabeza con cinta métrica (circunferencia en
-              cm).
-            </p>
-          </div>
-
-          <div className={styles.sizeStep}>
-            <div className={styles.badge}>2</div>
-            <p>
-              <strong>Compara</strong> con rangos:
-              <br />
-              <span className={styles.pill}>56–57 cm</span>{" "}
-              <span className={styles.pill}>58–59 cm</span>{" "}
-              <span className={styles.pill}>60–61 cm</span>
-            </p>
-          </div>
-
-          <div className={styles.sizeStep}>
-            <div className={styles.badge}>3</div>
-            <p>
-              <strong>Si dudas:</strong> mejor ajustable (Snapback/Strapback).
-              <br />
-              <strong>En Fitted:</strong> si aprieta/molesta, sube talla.
-            </p>
+          <div className={styles.guideBadges}>
+            <span className={styles.badge}>Ajustable</span>
+            <span className={styles.badge}>Talla exacta</span>
+            <span className={styles.badge}>Comodidad</span>
           </div>
         </div>
+
+        <figure className={styles.figure}>
+          <img
+            src={estilosGorras}
+            alt="Guía de tipos de gorra (parte trasera y ajuste)"
+            className={styles.banner}
+            loading="lazy"
+          />
+          <figcaption className={styles.caption}>
+            Tip: si buscas frescura, Trucker. Si quieres talla exacta, Fitted.
+          </figcaption>
+        </figure>
       </div>
 
-      <div className={styles.block}>
-        <h3>3) Colores según tu estilo</h3>
+      {/* ===== QUICK PICK ===== */}
+      <div className={styles.pick}>
+        <h3 className={styles.pickTitle}>¿Qué estás buscando?</h3>
+        <p className={styles.pickSub}>Elige una opción y te recomendamos la mejor.</p>
 
-        <div className={styles.swatches}>
-          <div className={styles.swatch}>
-            <span className={`${styles.dot} ${styles.cBlack}`}></span>
-            <div>
-              <strong>Negro</strong>
-              <p>Combina con todo</p>
-            </div>
-          </div>
-
-          <div className={styles.swatch}>
-            <span className={`${styles.dot} ${styles.cRed}`}></span>
-            <div>
-              <strong>Rojo</strong>
-              <p>Destaca / outfit simple</p>
-            </div>
-          </div>
-
-          <div className={styles.swatch}>
-            <span className={`${styles.dot} ${styles.cWhite}`}></span>
-            <div>
-              <strong>Blanco</strong>
-              <p>Fresco y limpio</p>
-            </div>
-          </div>
-
-          <div className={styles.swatch}>
-            <span className={`${styles.dot} ${styles.cBeige}`}></span>
-            <div>
-              <strong>Beige</strong>
-              <p>Estilo casual</p>
-            </div>
-          </div>
-
-          <div className={styles.swatch}>
-            <span className={`${styles.dot} ${styles.cNavy}`}></span>
-            <div>
-              <strong>Azul marino</strong>
-              <p>Más elegante</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className={styles.block}>
-        <h3>4) Recomendación rápida</h3>
-        <p className={styles.mini}>Elige una opción y te decimos la mejor.</p>
-
-        <div className={styles.quick}>
-          <button
-            className={styles.qbtn}
-            onClick={() => setReco("Entonces te va mejor una Fitted (talla exacta en cm).")}
-          >
-            Quiero talla exacta
+        <div className={styles.actions}>
+          <button onClick={() => setPick("Te recomendamos una Fitted: talla exacta y acabado premium.")}>
+            Ajuste exacto
           </button>
-
-          <button
-            className={styles.qbtn}
-            onClick={() => setReco("Entonces te va mejor una Snapback o Strapback (ajustable).")}
-          >
-            Quiero ajustar
+          <button onClick={() => setPick("Snapback o Strapback: ajuste flexible y estilo urbano.")}>
+            Ajustable
           </button>
-
-          <button
-            className={styles.qbtn}
-            onClick={() => setReco("Entonces te va mejor una Trucker (más fresca).")}
-          >
-            Para calor
+          <button onClick={() => setPick("Trucker: más fresca, ideal para calor.")}>
+            Clima cálido
           </button>
-
-          <button
-            className={styles.qbtn}
-            onClick={() => setReco("Entonces te va mejor una Snapback (estilo urbano).")}
-          >
+          <button onClick={() => setPick("Snapback: combina mejor con outfits urbanos.")}>
             Outfit urbano
           </button>
         </div>
 
-        {reco && (
-          <p className={styles.answer}>
-            ✅ {reco}{" "}
-            <button
-              className={styles.clear}
-              onClick={() => setReco("")}
-              aria-label="Cerrar"
-            >
+        {pick && (
+          <div className={styles.result} role="status" aria-live="polite">
+            <span className={styles.check} aria-hidden="true">✔</span>
+            <p className={styles.resultText}>{pick}</p>
+            <button className={styles.close} onClick={() => setPick("")} aria-label="Cerrar">
               ×
             </button>
-          </p>
+          </div>
         )}
+      </div>
+
+      {/* ===== CTA ===== */}
+      <div className={styles.cta}>
+        <p>
+          ¿Aún con dudas? Te asesoramos directo por WhatsApp en minutos.
+        </p>
+        <a href="#contacto">Hablar con un asesor</a>
       </div>
     </section>
   );

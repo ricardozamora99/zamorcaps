@@ -1,56 +1,210 @@
-import CatalogSlider from "./CatalogSlider/CatalogSlider";
-import zamorLogodf from "../../Images/logo ZAMOR CAPS.jpg";
+import { useEffect, useMemo, useState } from "react";
+import { sanity } from "../../sanityClient";
 import styles from "./CatalogSection.module.css";
 
-// Images moved to: src/Images/ImagenesCapsZC/
-import img01 from "../../Images/ImagenesCapsZC/01.png";
-import img02 from "../../Images/ImagenesCapsZC/02.jpg";
-import img03 from "../../Images/ImagenesCapsZC/03.jpg";
-import img04 from "../../Images/ImagenesCapsZC/04.png";
-import img05 from "../../Images/ImagenesCapsZC/05.png";
-import img06 from "../../Images/ImagenesCapsZC/06.png";
-import img07 from "../../Images/ImagenesCapsZC/07.png";
-import img08 from "../../Images/ImagenesCapsZC/08.png";
-import img09 from "../../Images/ImagenesCapsZC/09.png";
+export default function CatalogSection({ onAddToCart }) {
+  const [products, setProducts] = useState([]);
+  const [errorMsg, setErrorMsg] = useState("");
 
-export default function CatalogSection() {
-  const items1 = [
-    { img: img01, name: "Gorra 1" },
-    { img: img02, name: "Gorra 2" },
-    { img: img03, name: "Gorra 3" },
-    { img: img04, name: "Gorra 4" },
-    { img: img05, name: "Gorra 5" },
-    { img: img06, name: "Gorra 6" },
-    { img: img07, name: "Gorra 7" },
-    { img: img08, name: "Gorra 8" },
-    { img: img09, name: "Gorra 9" },
-  ];
+  // Modal (lightbox)
+  const [open, setOpen] = useState(false);
+  const [activeProduct, setActiveProduct] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  const items2 = [
-    { img: zamorLogodf, name: "Bolso 1" },
-    { img: zamorLogodf, name: "Bolso 2" },
-    { img: zamorLogodf, name: "Bolso 3" },
-    { img: zamorLogodf, name: "Bolso 4" },
-    { img: zamorLogodf, name: "Bolso 5" },
-    { img: zamorLogodf, name: "Bolso 6" },
-  ];
+  useEffect(() => {
+    sanity
+      .fetch(`
+        *[_type == "product"] | order(_createdAt desc){
+          _id,
+          title,
+          description,
+          available,
+          images[]{
+            asset->{url}
+          }
+        }
+      `)
+      .then((data) => setProducts(data || []))
+      .catch((err) => {
+        console.error("Sanity fetch error:", err);
+        setErrorMsg("No pude leer productos desde Sanity.");
+      });
+  }, []);
+
+  const gorras = useMemo(() => products, [products]);
+
+  const openProduct = (p) => {
+    setActiveProduct(p);
+    setActiveIndex(0);
+    setOpen(true);
+  };
+
+  const closeProduct = () => {
+    setOpen(false);
+    setActiveProduct(null);
+    setActiveIndex(0);
+  };
+
+  // cerrar con ESC
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") closeProduct();
+      if (e.key === "ArrowRight") setActiveIndex((i) => i + 1);
+      if (e.key === "ArrowLeft") setActiveIndex((i) => Math.max(0, i - 1));
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const activeImages = activeProduct?.images || [];
+  const maxIndex = Math.max(0, activeImages.length - 1);
+  const safeIndex = Math.min(activeIndex, maxIndex);
+  const bigUrl = activeImages?.[safeIndex]?.asset?.url;
 
   return (
-    <section id="catalogo" className={styles.section}>
-      <h2 className={styles.h2}>CATÁLOGO</h2>
-      <p className={styles.sub}>Aqui puedes ver algunos de nuestros productos.</p>
+    <section id="catalogo" className={`section ${styles.section}`} aria-labelledby="catalogo-title">
+      <header className={styles.head}>
+        <p className={styles.kicker}>Catálogo</p>
+        <h2 id="catalogo-title" className={styles.h2}>Nuestros productos</h2>
+        <p className={styles.sub}>
+          Guarda tus favoritos en el carrito y pregúntanos precio por WhatsApp.
+        </p>
+      </header>
 
       <h3 id="gorras" className={styles.title}>GORRAS</h3>
-      <CatalogSlider items={items1} />
 
-      <p className={styles.description}>
-        Para ver el catálogo completo, haz clic en <strong>"VER CATÁLOGO"</strong>.
-      </p>
+      {errorMsg && <p className={styles.stateError}>{errorMsg}</p>}
+      {!errorMsg && products.length === 0 && (
+        <p className={styles.stateLoading}>Cargando productos...</p>
+      )}
+
+      <div className={styles.grid}>
+        {gorras.map((p) => {
+          const url = p?.images?.[0]?.asset?.url;
+          const isAvailable = p?.available !== false;
+
+          return (
+            <article key={p._id} className={styles.card}>
+              <div className={styles.media}>
+                {/* SOLO IMAGEN abre modal */}
+                <button
+                  className={styles.imgBtn}
+                  type="button"
+                  onClick={() => openProduct(p)}
+                  aria-label={`Ver ${p.title} en grande`}
+                >
+                  {url ? (
+                    <img className={styles.img} src={url} alt={p.title} loading="lazy" />
+                  ) : (
+                    <div className={styles.noImg}>Sin imagen</div>
+                  )}
+                </button>
+
+                <div className={styles.badges}>
+                  <span
+                    className={`${styles.badge} ${isAvailable ? styles.badgeOk : styles.badgeOff}`}
+                  >
+                    {isAvailable ? "Disponible" : "Agotado"}
+                  </span>
+                </div>
+              </div>
+
+              <div className={styles.body}>
+                <h4 className={styles.name}>{p.title}</h4>
+
+                {p.description ? (
+                  <p className={styles.desc}>{p.description}</p>
+                ) : (
+                  <p className={styles.descMuted}>Descripción pendiente.</p>
+                )}
+
+                <p className={styles.priceLine}>
+                  <span className={styles.priceLabel}>Precio:</span> —
+                </p>
+
+                <div className={styles.actions}>
+                  <a className={styles.ctaGhost} href="#contacto">
+                    Preguntar
+                  </a>
+
+                  <button
+                    className={styles.cta}
+                    type="button"
+                    disabled={!isAvailable}
+                    onClick={() =>
+                      onAddToCart?.({
+                        id: p._id,
+                        title: p.title,
+                        image: url || "",
+                      })
+                    }
+                  >
+                    {isAvailable ? "Añadir al carrito" : "Agotado"}
+                  </button>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
 
       <h3 id="bolsos" className={styles.title}>BOLSOS</h3>
-      <p className={styles.description}>Proximamente disponibles.</p>
+      <p className={styles.description}>Próximamente disponibles.</p>
 
-      <CatalogSlider items={items2} />
+      {/* MODAL / LIGHTBOX */}
+      {open && (
+        <>
+          <div className={styles.modal} role="dialog" aria-modal="true" aria-label="Vista del producto">
+            <div className={styles.modalCard}>
+              <div className={styles.modalHead}>
+                <strong className={styles.modalTitle}>{activeProduct?.title}</strong>
+                <button className={styles.modalClose} onClick={closeProduct} aria-label="Cerrar">
+                  ✕
+                </button>
+              </div>
+
+              <div className={styles.modalMedia}>
+                {bigUrl ? (
+                  <img className={styles.modalImg} src={bigUrl} alt={activeProduct?.title || "Producto"} />
+                ) : (
+                  <div className={styles.modalNoImg}>Sin imagen</div>
+                )}
+
+                {/* Flechas (por ahora si hay 1 imagen, no estorban) */}
+                <button
+                  className={styles.navLeft}
+                  onClick={() => setActiveIndex((i) => Math.max(0, i - 1))}
+                  aria-label="Anterior"
+                  disabled={safeIndex <= 0}
+                >
+                  ‹
+                </button>
+                <button
+                  className={styles.navRight}
+                  onClick={() => setActiveIndex((i) => Math.min(maxIndex, i + 1))}
+                  aria-label="Siguiente"
+                  disabled={safeIndex >= maxIndex}
+                >
+                  ›
+                </button>
+              </div>
+
+              <div className={styles.modalBody}>
+                <p className={styles.modalDesc}>
+                  {activeProduct?.description || "Descripción pendiente."}
+                </p>
+
+                <p className={styles.modalPrice}>
+                  <span>Precio:</span> —
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <button className={styles.backdrop} onClick={closeProduct} aria-label="Cerrar vista" />
+        </>
+      )}
     </section>
   );
 }

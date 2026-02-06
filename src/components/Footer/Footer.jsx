@@ -1,29 +1,40 @@
 import styles from "./Footer.module.css";
 
+const WA_LINK =
+  "https://wa.me/573157270599?text=Hola%20Zamor%20Caps!%20Quiero%20hacer%20un%20pedido.";
+
 export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className={styles.footer}>
+    <footer className={styles.footer} aria-label="Footer">
       <div className={styles.inner}>
-        {/* top row */}
+        {/* TOP ROW */}
         <div className={styles.top}>
-          <div>
+          <div className={styles.brand}>
             <div className={styles.title}>Zamor Caps</div>
             <div className={styles.sub}>
-              Gorras personalizadas · Envíos · Atención por WhatsApp
+              Gorras premium · Envíos · Atención por WhatsApp
+            </div>
+
+            <div className={styles.trust}>
+              <span className={styles.trustPill}>✓ Respuesta rápida</span>
+              <span className={styles.trustPill}>✓ Envíos coordinados</span>
+              <span className={styles.trustPill}>✓ Calidad premium</span>
             </div>
           </div>
 
-          <nav className={styles.nav} aria-label="Footer">
+          <nav className={styles.nav} aria-label="Navegación del footer">
             <a className={styles.link} href="#catalogo">Catálogo</a>
+            <a className={styles.link} href="#recomendaciones">Recomendaciones</a>
             <a className={styles.link} href="#como-comprar">Cómo comprar</a>
             <a className={styles.link} href="#contacto">Contacto</a>
           </nav>
         </div>
 
-        {/* middle grid */}
+        {/* GRID */}
         <div className={styles.grid}>
+          {/* Nota */}
           <div className={styles.block}>
             <div className={styles.label}>Nota</div>
             <p className={styles.text}>
@@ -32,15 +43,32 @@ export default function Footer() {
             </p>
           </div>
 
+          {/* Atención + CTA */}
           <div className={styles.block}>
             <div className={styles.label}>Atención</div>
             <p className={styles.text}>
               ¿Quieres cotizar o pedir una gorra? Escríbenos y te ayudamos en minutos.
             </p>
+
+            <a
+              className={styles.whatsBtn}
+              href={WA_LINK}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Escribir por WhatsApp
+              <span className={styles.whatsArrow} aria-hidden="true">↗</span>
+            </a>
+
+            <div className={styles.miniNote}>
+              Horario: respuesta rápida (según disponibilidad).
+            </div>
           </div>
 
+          {/* Créditos */}
           <div className={styles.block}>
             <div className={styles.label}>Créditos</div>
+
             <div className={styles.credits}>
               <span className={styles.creditsLabel}>Built by</span>
               <a
@@ -61,17 +89,27 @@ export default function Footer() {
                 GitHub
               </a>
             </div>
+
+            <div className={styles.sep} />
+
+            <div className={styles.microLinks}>
+              <a className={styles.microLink} href="#catalogo">Productos</a>
+              <span className={styles.dot}>•</span>
+              <a className={styles.microLink} href="#contacto">Soporte</a>
+              <span className={styles.dot}>•</span>
+              <a className={styles.microLink} href="#como-comprar">Proceso</a>
+            </div>
           </div>
         </div>
 
-        {/* bottom row */}
+        {/* BOTTOM */}
         <div className={styles.bottom}>
           <div className={styles.copy}>
             © {year} Zamor Caps. Todos los derechos reservados.
           </div>
 
           <div className={styles.disclaimer}>
-            Sitio informativo. Colores y disponibilidad pueden variar.
+            Sitio informativo. Colores, bordados y disponibilidad pueden variar.
           </div>
         </div>
       </div>

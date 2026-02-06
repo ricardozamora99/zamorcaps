@@ -10,11 +10,12 @@
 
 .inner{
   max-width: var(--container);
+  margin: 0 auto;
   padding: 0 16px;
   text-align: left;
 }
 
-/* top row */
+/* ===== TOP ROW ===== */
 .top{
   display: flex;
   align-items: flex-end;
@@ -22,6 +23,11 @@
   gap: 18px;
   padding-bottom: 14px;
   border-bottom: 1px solid var(--line);
+}
+
+.brand{
+  display: grid;
+  gap: 8px;
 }
 
 .title{
@@ -32,7 +38,7 @@
 }
 
 .sub{
-  margin-top: 6px;
+  margin-top: 0;
   font-size: 12px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -40,7 +46,26 @@
   font-weight: 700;
 }
 
-/* nav */
+/* trust pills */
+.trust{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.trustPill{
+  display: inline-block;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.82);
+  font-weight: 900;
+  font-size: 12px;
+  color: rgba(20,20,22,0.70);
+}
+
+/* ===== NAV ===== */
 .nav{
   display: inline-flex;
   gap: 14px;
@@ -66,7 +91,7 @@
   transform: translateY(-1px);
 }
 
-/* grid */
+/* ===== GRID ===== */
 .grid{
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -80,6 +105,29 @@
   border-radius: var(--radius-sm);
   padding: 14px;
   box-shadow: var(--shadow-soft);
+  position: relative;
+  overflow: hidden;
+}
+
+.block::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  opacity: 0;
+  transition: opacity 180ms ease;
+  pointer-events:none;
+  background:
+    radial-gradient(520px 220px at 10% 0%, rgba(214,24,24,0.06), transparent 60%),
+    radial-gradient(520px 220px at 90% 0%, rgba(23,55,120,0.05), transparent 55%);
+}
+
+.block > *{
+  position: relative;
+  z-index: 1;
+}
+
+.block:hover::before{
+  opacity: 1;
 }
 
 .label{
@@ -97,6 +145,45 @@
   line-height: 1.6;
   color: rgba(20,20,22,0.72);
   font-weight: 600;
+}
+
+/* WhatsApp CTA inside grid */
+.whatsBtn{
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 999px;
+
+  background: #25D366;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 1000;
+  letter-spacing: 0.02em;
+
+  border: 1px solid rgba(0,0,0,0.10);
+  transition: transform 160ms ease, filter 160ms ease;
+}
+
+.whatsBtn:hover{
+  transform: translateY(-1px);
+  filter: brightness(0.97);
+}
+
+.whatsArrow{
+  font-weight: 1000;
+  opacity: 0.95;
+}
+
+.miniNote{
+  margin-top: 8px;
+  font-size: 12px;
+  color: rgba(20,20,22,0.55);
+  font-weight: 650;
 }
 
 /* credits */
@@ -132,7 +219,38 @@
   border-bottom-color: rgba(214,24,24,0.85);
 }
 
-/* bottom row */
+.sep{
+  margin: 10px 0;
+  height: 1px;
+  background: rgba(0,0,0,0.08);
+}
+
+.microLinks{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.microLink{
+  text-decoration: none;
+  color: rgba(20,20,22,0.62);
+  font-weight: 800;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+}
+
+.microLink:hover{
+  color: rgba(23,55,120,0.92);
+  border-bottom-color: rgba(214,24,24,0.85);
+}
+
+.dot{
+  color: rgba(20,20,22,0.30);
+}
+
+/* ===== BOTTOM ROW ===== */
 .bottom{
   margin-top: 16px;
   padding-top: 12px;
@@ -155,7 +273,7 @@
   font-weight: 700;
 }
 
-/* responsive */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 900px){
   .top{
     flex-direction: column;
