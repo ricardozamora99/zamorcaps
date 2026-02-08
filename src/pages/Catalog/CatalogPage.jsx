@@ -70,7 +70,7 @@ export default function CatalogPage({ onAddToCart }) {
     setMaxPrice((prev) => (prev ? prev : priceBounds.max));
   }, [priceBounds.max]);
 
-  // Apply filters
+  // Apply filters + SORT BY PRICE (ASC)
   const filtered = useMemo(() => {
     const byType = (p) => {
       if (type === "all") return true;
@@ -83,7 +83,23 @@ export default function CatalogPage({ onAddToCart }) {
       return v <= Number(maxPrice || 0);
     };
 
-    return availableProducts.filter((p) => byType(p) && byPrice(p));
+    const list = availableProducts.filter((p) => byType(p) && byPrice(p));
+
+    // ✅ sort by price (low -> high). No-price items go LAST.
+    const sorted = [...list].sort((a, b) => {
+      const pa = Number(a?.price);
+      const pb = Number(b?.price);
+
+      const aHas = Number.isFinite(pa) && pa > 0;
+      const bHas = Number.isFinite(pb) && pb > 0;
+
+      if (aHas && bHas) return pa - pb; // both have price
+      if (aHas && !bHas) return -1;     // a first
+      if (!aHas && bHas) return 1;      // b first
+      return 0;                         // both no price
+    });
+
+    return sorted;
   }, [availableProducts, type, maxPrice]);
 
   // Pagination
@@ -235,7 +251,7 @@ export default function CatalogPage({ onAddToCart }) {
               </div>
 
               <div className="filtersNote">
-                * Si un producto no tiene precio, lo dejamos visible.
+                Agrega al carrito y contactanos por WhatsApp.
               </div>
             </div>
 

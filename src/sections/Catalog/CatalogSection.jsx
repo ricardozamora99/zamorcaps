@@ -48,7 +48,7 @@ export default function CatalogSection({ onAddToCart }) {
 
   // SOLO gorras disponibles, y SOLO 9
   const gorras = useMemo(() => {
-    return (products || []).filter(isAvail).slice(0, 9);
+    return (products || []).filter(isAvail).slice(0, 6);
   }, [products]);
 
   const openProduct = (p) => {
@@ -97,8 +97,7 @@ export default function CatalogSection({ onAddToCart }) {
           Nuestros productos
         </h2>
         <p className={styles.sub}>
-          Guarda tus favoritos en el carrito y pregúntanos por WhatsApp.
-        </p>
+  Algunos de nuestros favoritos del momento. Agrega al carrito y pregúntanos por WhatsApp.      </p>
       </header>
 
       <h3 id="gorras" className={styles.title}>

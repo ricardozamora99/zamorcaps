@@ -41,6 +41,14 @@ export default function Navbar({
     closeTimerRef.current = setTimeout(() => setCatalogOpen(false), 200);
   };
 
+  const formatCOP = (n) =>
+  Number(n || 0).toLocaleString("es-CO", {
+    style: "currency",
+    currency: "COP",
+    maximumFractionDigits: 0,
+  });
+
+
   useEffect(() => {
     return () => {
       if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
@@ -306,7 +314,7 @@ export default function Navbar({
 
                   <div className={styles.cartMeta}>
                     <div className={styles.cartName}>{it.title}</div>
-                    <div className={styles.cartPrice}>Precio: —</div>
+                    <div className={styles.cartPrice}>Precio: {formatCOP(it.price)}</div>
                   </div>
 
                   <div className={styles.cartQty}>
