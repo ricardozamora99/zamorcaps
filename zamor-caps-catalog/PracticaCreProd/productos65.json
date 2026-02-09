@@ -1,0 +1,147 @@
+[
+  {
+    "_type": "product",
+    "image": "65_01",
+    "title": "Gorra Los Angeles Lakers Negra & Morada — Logo Bordado NBA",
+    "category": "cap",
+    "price": 65000,
+    "description": "Gorra New Era Los Angeles Lakers en negro con visera morada y logo NBA bordado en amarillo y morado. Diseño icónico del basketball con estética urbana premium. Ideal para fanáticos de la NBA y outfits streetwear con carácter.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "65_02",
+    "title": "Gorra Washington Nationals Roja — Logo W Bordado Clásico",
+    "category": "cap",
+    "price": 65000,
+    "description": "Gorra roja New Era Washington Nationals con logo W bordado en blanco y detalles laterales premium. Estilo deportivo clásico de la MLB, perfecta para looks urbanos con color y presencia. Ajuste cómodo y estructura firme.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "65_03",
+    "title": "Gorra Oakland Athletics Verde — Bordado Lightning Edition",
+    "category": "cap",
+    "price": 65000,
+    "description": "Gorra Oakland Athletics en verde oscuro con bordado A’s en blanco y diseño lightning alrededor del panel frontal. Estética agresiva y llamativa que combina MLB con streetwear moderno. Ideal para destacar.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "65_04",
+    "title": "Gorra Los Angeles Dodgers Verde & Gris — Bordado LA Neon Drip",
+    "category": "cap",
+    "price": 65000,
+    "description": "Gorra Los Angeles Dodgers en verde con visera gris y logo LA bordado en verde neón con efecto drip. Diseño moderno y atrevido que mezcla deporte y streetwear contemporáneo. Acabados premium y ajuste New Era.",
+    "available": true
+  },
+
+  {
+    "_type": "product",
+    "image": "65_05",
+    "title": "Gorra New York Yankees Verde — Tipografía Bordada Tricolor",
+    "category": "cap",
+    "price": 65000,
+    "description": "Gorra New Era New York Yankees en verde con bordado tipográfico multicolor en tonos verde, amarillo y rosado. Diseño llamativo y moderno que mezcla MLB con streetwear creativo. Ideal para destacar con estilo urbano.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "65_06",
+    "title": "Gorra Chicago White Sox Negra — Logo Bordado Verde Clásico",
+    "category": "cap",
+    "price": 65000,
+    "description": "Gorra Chicago White Sox en negro con logo bordado en verde y contorno amarillo. Estética sólida y deportiva de la MLB con un toque distintivo de color. Perfecta para outfits urbanos sobrios con detalle premium.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "65_07",
+    "title": "Gorra Los Angeles Dodgers Negra — Logo LA Rojo Drip",
+    "category": "cap",
+    "price": 65000,
+    "description": "Gorra Los Angeles Dodgers en negro con logo LA bordado en rojo con efecto drip. Diseño agresivo y contemporáneo que fusiona MLB con streetwear moderno. Ideal para looks urbanos de alto impacto visual.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "65_08",
+    "title": "Gorra Los Angeles Dodgers Beige & Azul — Logo Bordado Clásico",
+    "category": "cap",
+    "price": 65000,
+    "description": "Gorra Los Angeles Dodgers en tono beige con visera azul y logo LA bordado en azul intenso. Estilo clásico y limpio de la MLB, fácil de combinar y perfecto para outfits casuales y urbanos.",
+    "available": true
+  },
+{
+    "_type": "product",
+    "image": "65_09",
+    "title": "Gorra San Francisco Giants Negra — Bordado SF Naranja + Parches World Series",
+    "category": "cap",
+    "price": 65000,
+    "description": "Gorra New Era San Francisco Giants en negro con logo SF bordado en naranja y parches conmemorativos estilo World Series. Diseño premium con vibra histórica y streetwear. Ideal para looks oscuros con detalle fuerte.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "65_10",
+    "title": "Gorra New York Yankees Beige & Azul — Multiple Logos Edition",
+    "category": "cap",
+    "price": 65000,
+    "description": "Gorra New York Yankees en tono beige con visera azul marino y logos NY bordados alrededor. Estética moderna y llamativa, mezcla perfecta entre clásico MLB y diseño contemporáneo. Acabados premium y estructura firme.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "65_11",
+    "title": "Gorra Los Angeles Dodgers Crema & Negra — Logo LA Bordado Azul",
+    "category": "cap",
+    "price": 65000,
+    "description": "Gorra Los Angeles Dodgers en crema con visera negra y logo LA bordado en azul. Diseño limpio y elegante, súper combinable para outfits casuales y urbanos. Estilo MLB clásico con contraste premium.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "65_12",
+    "title": "Gorra New York Yankees Negra & Verde — Logo NY Bordado Blanco",
+    "category": "cap",
+    "price": 65000,
+    "description": "Gorra Yankees en negro con visera verde y logo NY bordado en blanco. Contraste fuerte y estilo urbano clásico, perfecta para streetwear sobrio con un toque de color. Ajuste cómodo y acabados New Era.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "65_13",
+    "title": "Gorra Detroit Tigers Beige & Negra — Letra D Old English",
+    "category": "cap",
+    "price": 65000,
+    "description": "Gorra estilo MLB en beige con visera negra y letra D bordada en estilo Old English. Look vintage y elegante, ideal para quienes buscan un diseño clásico con presencia. Perfecta para outfits neutrales y premium.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "65_14",
+    "title": "Gorra Los Angeles Dodgers Crema & Marrón — Logo LA Bordado Celeste",
+    "category": "cap",
+    "price": 65000,
+    "description": "Gorra LA Dodgers en crema con visera marrón y logo LA bordado en celeste. Combinación de tonos cálidos con detalle fresco, estética moderna y premium. Ideal para outfits streetwear y casual sofisticado.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "65_15",
+    "title": "Gorra Los Angeles Angels Verde Oliva — Logo A Bordado Clásico",
+    "category": "cap",
+    "price": 65000,
+    "description": "Gorra Los Angeles Angels en verde oliva con logo A bordado en rojo con halo dorado. Estilo deportivo con vibra militar/utility, perfecta para looks urbanos y outdoor. Acabado premium y estructura firme.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "65_16",
+    "title": "Gorra B Crema & Verde — Bordado Vintage Letter Edition",
+    "category": "cap",
+    "price": 65000,
+    "description": "Gorra en crema con visera verde y letra B bordada en blanco con contorno sutil. Estética vintage y minimalista, fácil de combinar y con un toque clásico de baseball. Ideal para outfits neutrales con detalle premium.",
+    "available": true
+  }
+]

@@ -122,6 +122,7 @@
   color: rgba(203,14,14,0.95);
 }
 
+/* ===== Price (dual range) ===== */
 .priceTop{
   display: flex;
   justify-content: space-between;
@@ -139,10 +140,85 @@
   font-size: 13px;
 }
 
-.priceRange{
-  width: 100%;
-  accent-color: #cb0e0e; /* bolita roja */
+.rangeWrap{
+  position: relative;
+  height: 30px;
+  margin-top: 6px;
 }
+
+/* Base track + highlighted selection */
+.rangeTrack{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 6px;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      to right,
+      rgba(0,0,0,0.10) 0%,
+      rgba(0,0,0,0.10) var(--minPct),
+      rgba(203,14,14,0.85) var(--minPct),
+      rgba(203,14,14,0.85) var(--maxPct),
+      rgba(0,0,0,0.10) var(--maxPct),
+      rgba(0,0,0,0.10) 100%
+    );
+}
+
+/* Two sliders stacked */
+.priceRange{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 30px;
+  margin: 0;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: none; /* enable only thumbs */
+}
+
+/* thumbs clickable */
+.priceRange::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #cb0e0e;
+  border: 2px solid #ffffff;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+  cursor: pointer;
+}
+.priceRange::-moz-range-thumb{
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #cb0e0e;
+  border: 2px solid #ffffff;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+  cursor: pointer;
+}
+
+/* hide native track */
+.priceRange::-webkit-slider-runnable-track{
+  height: 6px;
+  background: transparent;
+}
+.priceRange::-moz-range-track{
+  height: 6px;
+  background: transparent;
+}
+
+/* Ensure max thumb is above when crossing */
+.priceRangeMin{ z-index: 2; }
+.priceRangeMax{ z-index: 3; }
 
 .priceMinMax{
   display: flex;
@@ -193,7 +269,7 @@
   gap: 14px;
 }
 
-/* Responsive: collapse columns but keep sidebar behavior */
+/* Responsive */
 @media (max-width: 1100px){
   .catalogLayout{
     grid-template-columns: 1fr;
@@ -206,10 +282,19 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+/* Tablet */
 @media (max-width: 900px){
   .catalogGrid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* ✅ Mobile: 2 en 2 (NO 1 columna) */
 @media (max-width: 560px){
+  .catalogGrid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ultra small: ya aquí sí conviene 1 */
+@media (max-width: 380px){
   .catalogGrid{ grid-template-columns: 1fr; }
 }
 
@@ -233,7 +318,7 @@
   background: rgba(0,0,0,0.03);
 }
 
-/* NEW: button wrapper for image click (same idea as landing) */
+/* Image click */
 .catalogImgBtn{
   width: 100%;
   height: 100%;
@@ -406,7 +491,6 @@
 
 /* =========================================================
    MODAL / LIGHTBOX (Catalog Page)
-   - Copia de comportamiento del landing, adaptado a CSS global
    ========================================================= */
 
 .catalogModal{
@@ -416,7 +500,7 @@
   display: grid;
   place-items: center;
   padding: 18px;
-  pointer-events: none; /* card handles clicks */
+  pointer-events: none;
 }
 
 .catalogModalCard{

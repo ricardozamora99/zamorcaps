@@ -19,11 +19,18 @@ export default function Footer() {
         <div className={styles.top}>
           <div className={styles.brand}>
             <div className={styles.title}>Zamor Caps</div>
+
+            {/* Desktop full / Mobile compact */}
             <div className={styles.sub}>
-              Gorras premium · Envíos · Atención por WhatsApp
+              <span className={styles.subDesktop}>
+                Gorras premium · Envíos · Atención por WhatsApp
+              </span>
+              <span className={styles.subMobile}>
+                Gorras premium · Atención por WhatsApp
+              </span>
             </div>
 
-            <div className={styles.trust}>
+            <div className={styles.trust} aria-label="Confianza">
               <span className={styles.trustPill}>✓ Respuesta rápida</span>
               <span className={styles.trustPill}>✓ Envíos coordinados</span>
               <span className={styles.trustPill}>✓ Calidad premium</span>
@@ -43,7 +50,7 @@ export default function Footer() {
           {/* Nota */}
           <div className={styles.block}>
             <div className={styles.label}>Nota</div>
-            <p className={styles.text}>
+            <p className={`${styles.text} ${styles.clamp3}`}>
               La información de tallas, tipos y colores es una guía orientativa.
               La disponibilidad puede variar según stock.
             </p>
@@ -52,7 +59,7 @@ export default function Footer() {
           {/* Atención + CTA */}
           <div className={styles.block}>
             <div className={styles.label}>Atención</div>
-            <p className={styles.text}>
+            <p className={`${styles.text} ${styles.clamp3}`}>
               ¿Quieres cotizar o pedir una gorra? Escríbenos y te ayudamos en minutos.
             </p>
 
@@ -98,6 +105,7 @@ export default function Footer() {
 
             <div className={styles.sep} />
 
+            {/* En mobile esto se oculta para no cargar */}
             <div className={styles.microLinks}>
               <a className={styles.microLink} href="#catalogo">Productos</a>
               <span className={styles.dot}>•</span>
@@ -111,7 +119,7 @@ export default function Footer() {
         {/* BOTTOM */}
         <div className={styles.bottom}>
           <div className={styles.copy}>
-            © {year} Zamor Caps. Todos los derechos reservados.
+            © {year} Zamor Caps.
           </div>
 
           <div className={styles.disclaimer}>

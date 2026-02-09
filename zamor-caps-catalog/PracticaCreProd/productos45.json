@@ -1,0 +1,128 @@
+[
+  {
+    "_type": "product",
+    "image": "45_02",
+    "title": "Gorra Negra Nike Flame Dorado",
+    "category": "cap",
+    "price": 45000,
+    "description": "Gorra negra con bordado dorado estilo flame y parche Nike frontal. Diseño llamativo y agresivo, ideal para quienes buscan un look urbano con presencia. Acabados premium y estilo único.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "45_01",
+    "title": "Gorra Negra Perfil Bordado Dorado",
+    "category": "cap",
+    "price": 45000,
+    "description": "Gorra negra con bordado artístico en dorado y detalle de estrella frontal. Diseño elegante y distintivo que combina arte y estilo streetwear.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "45_03",
+    "title": "Gorra Negra W Bordada Trucker",
+    "category": "cap",
+    "price": 45000,
+    "description": "Gorra negra tipo trucker con letra W bordada en blanco. Diseño limpio y versátil, ideal para uso diario con un toque moderno y urbano.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "45_04",
+    "title": "Gorra Trucker Beige & Verde W Bordada",
+    "category": "cap",
+    "price": 45000,
+    "description": "Gorra trucker en tonos beige y verde con bordado W en morado y verde. Estilo outdoor y urbano combinado, perfecta para un look casual con personalidad.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "45_08",
+    "title": "Gorra Adidas Gris — Logo Trefoil Minimalista",
+    "category": "cap",
+    "price": 45000,
+    "description": "Gorra Adidas en gris con detalles blancos y logo Trefoil frontal en acabado metálico/negro. Diseño limpio y moderno, fácil de combinar para un look deportivo y urbano.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "45_05",
+    "title": "Gorra Trucker Roja W — Bordado Negro con Borde Dorado",
+    "category": "cap",
+    "price": 45000,
+    "description": "Gorra trucker roja con letra W bordada en negro y contorno dorado. Estilo llamativo y deportivo, ideal para destacar en outfits urbanos. Ajuste cómodo con panel trasero en malla.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "45_06",
+    "title": "Gorra Coach Beige & Negra — Monograma Clásico",
+    "category": "cap",
+    "price": 45000,
+    "description": "Gorra estilo baseball con monograma Coach en tono beige y visera negra. Diseño elegante y sobrio con vibra luxury casual, perfecta para combinar con outfits neutrales.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "45_07",
+    "title": "Gorra Coach Negra — Monograma Oscuro",
+    "category": "cap",
+    "price": 45000,
+    "description": "Gorra estilo baseball en negro con monograma Coach en gris oscuro y parche frontal. Estética discreta y premium, ideal para un look all-black o streetwear minimalista.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "45_10",
+    "title": "Gorra AMIRI Negra — Bordado Dorado Angelic Art",
+    "category": "cap",
+    "price": 45000,
+    "description": "Gorra negra estilo snapback con bordado AMIRI en hilo dorado y diseño angelical artístico al frente. Acabados premium y estética luxury streetwear. Ideal para outfits elegantes, urbanos y de alto impacto visual.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "45_11",
+    "title": "Gorra DSQUARED2 Negra — Parche Rojo Clásico",
+    "category": "cap",
+    "price": 45000,
+    "description": "Gorra negra estilo baseball con parche frontal DSQUARED2 en rojo y blanco. Diseño icónico y limpio, fácil de combinar. Visera curva, estructura firme y ajuste cómodo para uso diario.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "45_12",
+    "title": "Gorra Salty Ocean Negra — Parche Tropical Bordado",
+    "category": "cap",
+    "price": 45000,
+    "description": "Gorra negra con parche bordado Salty Ocean de inspiración tropical: palmeras, playa y surf. Estilo relajado y veraniego, ideal para looks casuales y outdoor. Ajuste cómodo y diseño fresco.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "45_09",
+    "title": "Gorra Adidas Negra Tipográfica — Bordado Blanco Oversize",
+    "category": "cap",
+    "price": 45000,
+    "description": "Gorra negra con logo Adidas tipográfico bordado en blanco de gran tamaño. Diseño deportivo y urbano con presencia fuerte. Ideal para streetwear y outfits casuales. Ajustable y de estructura firme.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "45_14",
+    "title": "Gorra Lacoste Negra — Bordado Dorado Artistic Croc",
+    "category": "cap",
+    "price": 45000,
+    "description": "Gorra negra estilo snapback con bordado dorado Lacoste y diseño artístico del cocodrilo en movimiento. Detalles premium y estética elegante. Ideal para quienes buscan un look sofisticado y urbano.",
+    "available": true
+  },
+  {
+    "_type": "product",
+    "image": "45_13",
+    "title": "Gorra Negra Monocromática Flame & Star — Bordado Negro",
+    "category": "cap",
+    "price": 45000,
+    "description": "Gorra completamente negra con bordado negro sobre negro: estrella y flamas en relieve. Diseño discreto pero agresivo, ideal para outfits all-black y streetwear minimalista. Ajustable y cómoda.",
+    "available": true
+  }
+]

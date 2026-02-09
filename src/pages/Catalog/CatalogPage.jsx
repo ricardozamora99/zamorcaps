@@ -11,6 +11,7 @@ export default function CatalogPage({ onAddToCart }) {
 
   // Filters
   const [type, setType] = useState("all"); // all | cap | bag
+  const [minPrice, setMinPrice] = useState(0); // set after load
   const [maxPrice, setMaxPrice] = useState(0); // set after load
   const [page, setPage] = useState(1);
 
@@ -58,17 +59,28 @@ export default function CatalogPage({ onAddToCart }) {
     const min = prices.length ? Math.min(...prices) : 0;
     const max = prices.length ? Math.max(...prices) : 0;
 
-    // nice step: 5k up to 100k, else 10k
     const step = max <= 100000 ? 5000 : 10000;
 
     return { min, max, step };
   }, [availableProducts]);
 
-  // Initialize slider max once data arrives
+  // Initialize sliders once data arrives
   useEffect(() => {
     if (!priceBounds.max) return;
+
+    setMinPrice((prev) => (prev ? prev : priceBounds.min));
     setMaxPrice((prev) => (prev ? prev : priceBounds.max));
-  }, [priceBounds.max]);
+  }, [priceBounds.min, priceBounds.max]);
+
+  // Clamp if bounds change
+  useEffect(() => {
+    if (!priceBounds.max) return;
+    setMinPrice((v) => Math.max(priceBounds.min, Math.min(v, priceBounds.max)));
+    setMaxPrice((v) => Math.max(priceBounds.min, Math.min(v, priceBounds.max)));
+  }, [priceBounds.min, priceBounds.max]);
+
+  const safeMin = Math.min(Number(minPrice || 0), Number(maxPrice || 0));
+  const safeMax = Math.max(Number(minPrice || 0), Number(maxPrice || 0));
 
   // Apply filters + SORT BY PRICE (ASC)
   const filtered = useMemo(() => {
@@ -77,13 +89,13 @@ export default function CatalogPage({ onAddToCart }) {
       return p?.category === type;
     };
 
-    const byPrice = (p) => {
+    const byPriceRange = (p) => {
       const v = Number(p?.price);
       if (!Number.isFinite(v) || v <= 0) return true; // if no price, keep it
-      return v <= Number(maxPrice || 0);
+      return v >= safeMin && v <= safeMax;
     };
 
-    const list = availableProducts.filter((p) => byType(p) && byPrice(p));
+    const list = availableProducts.filter((p) => byType(p) && byPriceRange(p));
 
     // ✅ sort by price (low -> high). No-price items go LAST.
     const sorted = [...list].sort((a, b) => {
@@ -93,21 +105,20 @@ export default function CatalogPage({ onAddToCart }) {
       const aHas = Number.isFinite(pa) && pa > 0;
       const bHas = Number.isFinite(pb) && pb > 0;
 
-      if (aHas && bHas) return pa - pb; // both have price
-      if (aHas && !bHas) return -1;     // a first
-      if (!aHas && bHas) return 1;      // b first
-      return 0;                         // both no price
+      if (aHas && bHas) return pa - pb;
+      if (aHas && !bHas) return -1;
+      if (!aHas && bHas) return 1;
+      return 0;
     });
 
     return sorted;
-  }, [availableProducts, type, maxPrice]);
+  }, [availableProducts, type, safeMin, safeMax]);
 
   // Pagination
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
 
   useEffect(() => {
-    // if filters reduce pages, clamp page
     if (page !== safePage) setPage(safePage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalPages]);
@@ -121,11 +132,25 @@ export default function CatalogPage({ onAddToCart }) {
 
   const resetFilters = () => {
     setType("all");
+    setMinPrice(priceBounds.min || 0);
     setMaxPrice(priceBounds.max || 0);
     setPage(1);
   };
 
-  const maxShown = Number(maxPrice || 0);
+  // Range UI percentages for highlight bar
+  const rangeUI = useMemo(() => {
+    const min = priceBounds.min || 0;
+    const max = priceBounds.max || 0;
+    const span = Math.max(1, max - min);
+
+    const minPct = max ? ((safeMin - min) / span) * 100 : 0;
+    const maxPct = max ? ((safeMax - min) / span) * 100 : 100;
+
+    return {
+      minPct: Math.max(0, Math.min(100, minPct)),
+      maxPct: Math.max(0, Math.min(100, maxPct)),
+    };
+  }, [priceBounds.min, priceBounds.max, safeMin, safeMax]);
 
   // ===== Modal helpers (igual al landing) =====
   const openProduct = (p) => {
@@ -140,25 +165,25 @@ export default function CatalogPage({ onAddToCart }) {
     setActiveIndex(0);
   };
 
-  // cerrar con ESC + flechas
+  const activeImages = activeProduct?.images || [];
+  const maxIndex = Math.max(0, activeImages.length - 1);
+  const safeIndex = Math.min(activeIndex, maxIndex);
+  const bigUrl = activeImages?.[safeIndex]?.asset?.url;
+
+  // cerrar con ESC + flechas (clamp)
   useEffect(() => {
     if (!open) return;
 
     const onKey = (e) => {
       if (e.key === "Escape") closeProduct();
-      if (e.key === "ArrowRight") setActiveIndex((i) => i + 1);
+      if (e.key === "ArrowRight") setActiveIndex((i) => Math.min(maxIndex, i + 1));
       if (e.key === "ArrowLeft") setActiveIndex((i) => Math.max(0, i - 1));
     };
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
-
-  const activeImages = activeProduct?.images || [];
-  const maxIndex = Math.max(0, activeImages.length - 1);
-  const safeIndex = Math.min(activeIndex, maxIndex);
-  const bigUrl = activeImages?.[safeIndex]?.asset?.url;
+  }, [open, maxIndex]);
 
   return (
     <main className="catalogPage">
@@ -222,37 +247,71 @@ export default function CatalogPage({ onAddToCart }) {
             </div>
 
             <div className="filtersBlock">
-              <div className="filtersLabel">Precio máximo</div>
+              <div className="filtersLabel">Rango de precio</div>
+
               <div className="priceTop">
-                <span className="priceHint">Hasta</span>
+                <span className="priceHint">Desde</span>
                 <span className="priceValue">
-                  {priceBounds.max ? `${formatCOP(maxShown)} COP` : "—"}
+                  {priceBounds.max ? `${formatCOP(safeMin)} COP` : "—"}
                 </span>
               </div>
 
-              <input
-                className="priceRange"
-                type="range"
-                min={priceBounds.min || 0}
-                max={priceBounds.max || 0}
-                step={priceBounds.step || 1000}
-                value={priceBounds.max ? maxShown : 0}
-                onChange={(e) => {
-                  setMaxPrice(Number(e.target.value));
-                  setPage(1);
+              <div className="priceTop">
+                <span className="priceHint">Hasta</span>
+                <span className="priceValue">
+                  {priceBounds.max ? `${formatCOP(safeMax)} COP` : "—"}
+                </span>
+              </div>
+
+              <div
+                className="rangeWrap"
+                style={{
+                  "--minPct": `${rangeUI.minPct}%`,
+                  "--maxPct": `${rangeUI.maxPct}%`,
                 }}
-                disabled={!priceBounds.max}
-                aria-label="Precio máximo"
-              />
+              >
+                <div className="rangeTrack" aria-hidden="true" />
+                <input
+                  className="priceRange priceRangeMin"
+                  type="range"
+                  min={priceBounds.min || 0}
+                  max={priceBounds.max || 0}
+                  step={priceBounds.step || 1000}
+                  value={priceBounds.max ? safeMin : 0}
+                  onChange={(e) => {
+                    const v = Number(e.target.value);
+                    setMinPrice(v);
+                    if (v > safeMax) setMaxPrice(v);
+                    setPage(1);
+                  }}
+                  disabled={!priceBounds.max}
+                  aria-label="Precio mínimo"
+                />
+
+                <input
+                  className="priceRange priceRangeMax"
+                  type="range"
+                  min={priceBounds.min || 0}
+                  max={priceBounds.max || 0}
+                  step={priceBounds.step || 1000}
+                  value={priceBounds.max ? safeMax : 0}
+                  onChange={(e) => {
+                    const v = Number(e.target.value);
+                    setMaxPrice(v);
+                    if (v < safeMin) setMinPrice(v);
+                    setPage(1);
+                  }}
+                  disabled={!priceBounds.max}
+                  aria-label="Precio máximo"
+                />
+              </div>
 
               <div className="priceMinMax" aria-hidden="true">
                 <span>{priceBounds.min ? `${formatCOP(priceBounds.min)} COP` : "—"}</span>
                 <span>{priceBounds.max ? `${formatCOP(priceBounds.max)} COP` : "—"}</span>
               </div>
 
-              <div className="filtersNote">
-                Agrega al carrito y contactanos por WhatsApp.
-              </div>
+              <div className="filtersNote">Agrega al carrito y contáctanos por WhatsApp.</div>
             </div>
 
             <div className="filtersDivider" />
@@ -263,6 +322,9 @@ export default function CatalogPage({ onAddToCart }) {
               </div>
               <div className="filtersSmall">
                 Página <strong>{safePage}</strong> de <strong>{totalPages}</strong>
+              </div>
+              <div className="filtersSmall">
+                Orden: <strong>Precio (menor → mayor)</strong>
               </div>
             </div>
           </div>
@@ -278,7 +340,6 @@ export default function CatalogPage({ onAddToCart }) {
               return (
                 <article key={p._id} className="catalogCard" role="listitem">
                   <div className="catalogMedia">
-                    {/* SOLO IMAGEN abre modal (igual al landing) */}
                     <button
                       className="catalogImgBtn"
                       type="button"
@@ -296,15 +357,11 @@ export default function CatalogPage({ onAddToCart }) {
                   <div className="catalogBody">
                     <h3 className="catalogName">{p.title}</h3>
 
-                    <p className="catalogDesc">
-                      {p.description || "Descripción pendiente."}
-                    </p>
+                    <p className="catalogDesc">{p.description || "Descripción pendiente."}</p>
 
                     <p className="catalogPrice">
                       <span>Precio:</span>{" "}
-                      <strong>
-                        {p?.price ? `${formatCOP(p.price)} COP` : "—"}
-                      </strong>
+                      <strong>{p?.price ? `${formatCOP(p.price)} COP` : "—"}</strong>
                     </p>
 
                     <button
@@ -327,11 +384,10 @@ export default function CatalogPage({ onAddToCart }) {
               );
             })}
 
-            {/* Empty state */}
             {pagedItems.length === 0 && (
               <div className="catalogEmpty">
                 <strong>No hay productos con esos filtros.</strong>
-                <span>Prueba subiendo el precio máximo o cambiando el tipo.</span>
+                <span>Prueba ampliando el rango o cambiando el tipo.</span>
                 <button className="emptyBtn" type="button" onClick={resetFilters}>
                   Reset filtros
                 </button>
@@ -395,12 +451,7 @@ export default function CatalogPage({ onAddToCart }) {
       {/* ===== MODAL / LIGHTBOX (igual al landing) ===== */}
       {open && (
         <>
-          <div
-            className="catalogModal"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Vista del producto"
-          >
+          <div className="catalogModal" role="dialog" aria-modal="true" aria-label="Vista del producto">
             <div className="catalogModalCard">
               <div className="catalogModalHead">
                 <strong className="catalogModalTitle">{activeProduct?.title}</strong>
@@ -416,11 +467,7 @@ export default function CatalogPage({ onAddToCart }) {
 
               <div className="catalogModalMedia">
                 {bigUrl ? (
-                  <img
-                    className="catalogModalImg"
-                    src={bigUrl}
-                    alt={activeProduct?.title || "Producto"}
-                  />
+                  <img className="catalogModalImg" src={bigUrl} alt={activeProduct?.title || "Producto"} />
                 ) : (
                   <div className="catalogModalNoImg">Sin imagen</div>
                 )}
@@ -446,15 +493,12 @@ export default function CatalogPage({ onAddToCart }) {
               </div>
 
               <div className="catalogModalBody">
-                <p className="catalogModalDesc">
-                  {activeProduct?.description || "Descripción pendiente."}
-                </p>
+                <p className="catalogModalDesc">{activeProduct?.description || "Descripción pendiente."}</p>
 
                 <p className="catalogModalPrice">
                   <span>Precio:</span>{" "}
                   <strong>
-                    {formatCOP(activeProduct?.price)}{" "}
-                    {activeProduct?.price ? "COP" : ""}
+                    {formatCOP(activeProduct?.price)} {activeProduct?.price ? "COP" : ""}
                   </strong>
                 </p>
 
@@ -477,11 +521,7 @@ export default function CatalogPage({ onAddToCart }) {
                     {activeProduct?.available === false ? "Agotado" : "Añadir al carrito"}
                   </button>
 
-                  <button
-                    className="catalogModalGhost"
-                    type="button"
-                    onClick={closeProduct}
-                  >
+                  <button className="catalogModalGhost" type="button" onClick={closeProduct}>
                     Seguir viendo
                   </button>
                 </div>
@@ -489,12 +529,7 @@ export default function CatalogPage({ onAddToCart }) {
             </div>
           </div>
 
-          <button
-            className="catalogBackdrop"
-            onClick={closeProduct}
-            aria-label="Cerrar vista"
-            type="button"
-          />
+          <button className="catalogBackdrop" onClick={closeProduct} aria-label="Cerrar vista" type="button" />
         </>
       )}
     </main>

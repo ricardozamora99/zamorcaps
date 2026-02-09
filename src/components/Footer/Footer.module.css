@@ -46,6 +46,9 @@
   font-weight: 700;
 }
 
+.subDesktop{ display: inline; }
+.subMobile{ display: none; }
+
 /* trust pills */
 .trust{
   display: flex;
@@ -145,6 +148,14 @@
   line-height: 1.6;
   color: rgba(20,20,22,0.72);
   font-weight: 600;
+}
+
+/* ✅ clamp (para mobile, pero no molesta en desktop) */
+.clamp3{
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* WhatsApp CTA inside grid */
@@ -287,5 +298,94 @@
   }
   .credits{
     white-space: normal;
+  }
+}
+
+/* ✅ Mobile polish: menos texto, más compacto */
+@media (max-width: 560px){
+  .footer{
+    padding: 18px 0 14px;
+  }
+
+  .inner{
+    padding: 0 14px;
+  }
+
+  .title{
+    font-size: 14px;
+  }
+
+  .sub{
+    font-size: 11px;
+    letter-spacing: 0.05em;
+  }
+  .subDesktop{ display: none; }
+  .subMobile{ display: inline; }
+
+  /* Oculta trust pills (son lo que más “carga”) */
+  .trust{
+    display: none;
+  }
+
+  /* Nav en 2 columnas, más compacto */
+  .nav{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 12px;
+    justify-content: flex-start;
+  }
+  .link{
+    font-size: 11px;
+    padding-bottom: 4px;
+    letter-spacing: 0.08em;
+  }
+
+  .grid{
+    gap: 10px;
+    padding-top: 12px;
+  }
+
+  .block{
+    padding: 12px;
+  }
+
+  .label{
+    font-size: 10px;
+    margin-bottom: 6px;
+  }
+
+  .text{
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .whatsBtn{
+    padding: 11px 12px;
+    font-size: 13px;
+  }
+
+  .miniNote{
+    font-size: 11px;
+  }
+
+  /* Oculta microLinks en mobile para que no sea “muro de texto” */
+  .microLinks{
+    display: none;
+  }
+
+  .bottom{
+    margin-top: 12px;
+    padding-top: 10px;
+    gap: 8px;
+  }
+
+  .copy{
+    font-size: 12px;
+  }
+
+  .disclaimer{
+    font-size: 12px;
+    line-height: 1.4;
   }
 }

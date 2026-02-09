@@ -46,7 +46,7 @@ export default function CatalogSection({ onAddToCart }) {
     }
   };
 
-  // SOLO gorras disponibles, y SOLO 9
+  // SOLO gorras disponibles, y SOLO 6
   const gorras = useMemo(() => {
     return (products || []).filter(isAvail).slice(0, 6);
   }, [products]);
@@ -63,25 +63,25 @@ export default function CatalogSection({ onAddToCart }) {
     setActiveIndex(0);
   };
 
-  // cerrar con ESC + flechas
+  const activeImages = activeProduct?.images || [];
+  const maxIndex = Math.max(0, activeImages.length - 1);
+  const safeIndex = Math.min(activeIndex, maxIndex);
+  const bigUrl = activeImages?.[safeIndex]?.asset?.url;
+
+  // cerrar con ESC + flechas (con clamp)
   useEffect(() => {
     if (!open) return;
 
     const onKey = (e) => {
       if (e.key === "Escape") closeProduct();
-      if (e.key === "ArrowRight") setActiveIndex((i) => i + 1);
+      if (e.key === "ArrowRight") setActiveIndex((i) => Math.min(maxIndex, i + 1));
       if (e.key === "ArrowLeft") setActiveIndex((i) => Math.max(0, i - 1));
     };
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
-
-  const activeImages = activeProduct?.images || [];
-  const maxIndex = Math.max(0, activeImages.length - 1);
-  const safeIndex = Math.min(activeIndex, maxIndex);
-  const bigUrl = activeImages?.[safeIndex]?.asset?.url;
+  }, [open, maxIndex]);
 
   const navigate = useNavigate();
 
@@ -97,7 +97,8 @@ export default function CatalogSection({ onAddToCart }) {
           Nuestros productos
         </h2>
         <p className={styles.sub}>
-  Algunos de nuestros favoritos del momento. Agrega al carrito y pregúntanos por WhatsApp.      </p>
+          Algunos de nuestros favoritos del momento. Agrega al carrito y pregúntanos por WhatsApp.
+        </p>
       </header>
 
       <h3 id="gorras" className={styles.title}>
@@ -163,27 +164,22 @@ export default function CatalogSection({ onAddToCart }) {
                   </span>
                 </p>
 
-                <div className={styles.actions}>
-                  <a className={styles.ctaGhost} href="#contacto">
-                    Preguntar
-                  </a>
-
-                  <button
-                    className={styles.cta}
-                    type="button"
-                    disabled={!available}
-                    onClick={() =>
-                      onAddToCart?.({
-                        id: p._id,
-                        title: p.title,
-                        image: url || "",
-                        price: p.price ?? null,
-                      })
-                    }
-                  >
-                    {available ? "Añadir al carrito" : "Agotado"}
-                  </button>
-                </div>
+                {/* ✅ Igual que CatalogPage: 1 solo botón full-width */}
+                <button
+                  className={styles.ctaFull}
+                  type="button"
+                  disabled={!available}
+                  onClick={() =>
+                    onAddToCart?.({
+                      id: p._id,
+                      title: p.title,
+                      image: url || "",
+                      price: p.price ?? null,
+                    })
+                  }
+                >
+                  {available ? "Añadir al carrito" : "Agotado"}
+                </button>
               </div>
             </article>
           );
@@ -207,7 +203,7 @@ export default function CatalogSection({ onAddToCart }) {
       </h3>
       <p className={styles.description}>Próximamente disponibles.</p>
 
-      {/* ===== MODAL / LIGHTBOX (idéntico al de CatalogPage) ===== */}
+      {/* ===== MODAL / LIGHTBOX ===== */}
       {open && (
         <>
           <div
