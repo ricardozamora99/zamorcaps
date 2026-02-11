@@ -1,9 +1,9 @@
+// Navbar.jsx (solo muestro el Navbar completo con el cambio de cartToast)
 import { useEffect, useRef } from "react";
 import zamorLogo from "../../Images/logo ZAMOR CAPSnoBG.png";
 import styles from "./Navbar.module.css";
 
 export default function Navbar({
-  // NEW
   variant = "home", // "home" | "catalog"
 
   menuOpen,
@@ -21,6 +21,9 @@ export default function Navbar({
   removeFromCart,
   buildWhatsAppUrl,
   closeAll,
+
+  // ✅ NUEVO
+  cartToast = "",
 }) {
   const closeTimerRef = useRef(null);
 
@@ -42,12 +45,11 @@ export default function Navbar({
   };
 
   const formatCOP = (n) =>
-  Number(n || 0).toLocaleString("es-CO", {
-    style: "currency",
-    currency: "COP",
-    maximumFractionDigits: 0,
-  });
-
+    Number(n || 0).toLocaleString("es-CO", {
+      style: "currency",
+      currency: "COP",
+      maximumFractionDigits: 0,
+    });
 
   useEffect(() => {
     return () => {
@@ -153,13 +155,10 @@ export default function Navbar({
 
           {/* RIGHT: Actions */}
           <div className={styles.actions}>
-            {/* Desktop links (ONLY in home) */}
             {!isCatalogVariant && (
               <ul className={styles.menu}>
                 <li
-                  className={`${styles.dropdown} ${
-                    catalogOpen ? styles.dropdownOpen : ""
-                  }`}
+                  className={`${styles.dropdown} ${catalogOpen ? styles.dropdownOpen : ""}`}
                   onMouseEnter={() => {
                     if (window.innerWidth > 900) openCatalog();
                   }}
@@ -177,13 +176,7 @@ export default function Navbar({
                     }}
                   >
                     Catálogo
-                    <span
-                      className={`${styles.chev} ${
-                        catalogOpen ? styles.chevUp : ""
-                      }`}
-                    >
-                      ▾
-                    </span>
+                    <span className={`${styles.chev} ${catalogOpen ? styles.chevUp : ""}`}>▾</span>
                   </a>
 
                   <ul
@@ -196,44 +189,26 @@ export default function Navbar({
                     }}
                   >
                     <li>
-                      <a href="#gorras" onClick={closeAll}>
-                        Gorras
-                      </a>
+                      <a href="#gorras" onClick={closeAll}>Gorras</a>
                     </li>
                     <li>
-                      <a href="#bolsos" onClick={closeAll}>
-                        Bolsos
-                      </a>
+                      <a href="#bolsos" onClick={closeAll}>Bolsos</a>
                     </li>
                   </ul>
                 </li>
 
-                <li>
-                  <a href="#recomendaciones" onClick={closeAll}>
-                    Recomendaciones
-                  </a>
-                </li>
-                <li>
-                  <a href="#como-comprar" onClick={closeAll}>
-                    Cómo comprar
-                  </a>
-                </li>
-                <li>
-                  <a href="#contacto" onClick={closeAll}>
-                    Contacto
-                  </a>
-                </li>
+                <li><a href="#recomendaciones" onClick={closeAll}>Recomendaciones</a></li>
+                <li><a href="#como-comprar" onClick={closeAll}>Cómo comprar</a></li>
+                <li><a href="#contacto" onClick={closeAll}>Contacto</a></li>
               </ul>
             )}
 
-            {/* Cart button (always) */}
             <button
               className={styles.cartBtn}
               type="button"
               aria-label="Abrir carrito"
               aria-expanded={cartOpen}
               onClick={() => {
-                // si estás en variant catalog, asegúrate que el menú móvil esté cerrado
                 if (isCatalogVariant) {
                   setMenuOpen?.(false);
                   setCatalogOpen?.(false);
@@ -241,16 +216,13 @@ export default function Navbar({
                 setCartOpen((v) => !v);
               }}
             >
-              <span className={styles.cartIcon} aria-hidden="true">
-                🛒
-              </span>
+              <span className={styles.cartIcon} aria-hidden="true">🛒</span>
               <span className={styles.cartText}>Carrito</span>
               <span className={styles.cartBadge} aria-label={`${cartCount} items`}>
                 {cartCount}
               </span>
             </button>
 
-            {/* Mobile hamburger (ONLY in home) */}
             {!isCatalogVariant && (
               <button
                 className={styles.toggle}
@@ -273,7 +245,6 @@ export default function Navbar({
         </nav>
       </div>
 
-      {/* Mobile menu panel (ONLY in home) */}
       {!isCatalogVariant && (
         <div className={`${styles.mobilePanel} ${menuOpen ? styles.mobileOpen : ""}`}>
           <a href="#gorras" onClick={closeAll}>Gorras</a>
@@ -297,6 +268,13 @@ export default function Navbar({
             ✕
           </button>
         </div>
+
+        {/* ✅ TOAST */}
+        {cartToast ? (
+          <div className={styles.cartToast} role="status" aria-live="polite">
+            {cartToast}
+          </div>
+        ) : null}
 
         <div className={styles.cartBody}>
           {cartItems.length === 0 ? (
@@ -368,7 +346,6 @@ export default function Navbar({
         </div>
       </aside>
 
-      {/* Backdrop for cart */}
       <button
         className={`${styles.backdrop} ${cartOpen ? styles.backdropOn : ""}`}
         aria-label="Cerrar carrito"

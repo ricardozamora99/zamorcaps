@@ -15,7 +15,7 @@ export default function CatalogPage({ onAddToCart }) {
   const [maxPrice, setMaxPrice] = useState(0); // set after load
   const [page, setPage] = useState(1);
 
-  // ===== Modal (lightbox) — igual al landing =====
+  // ===== Modal (lightbox)
   const [open, setOpen] = useState(false);
   const [activeProduct, setActiveProduct] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -30,6 +30,8 @@ export default function CatalogPage({ onAddToCart }) {
           available,
           category,
           price,
+          stock,
+          productId,
           images[]{ asset->{url} }
         }
       `)
@@ -45,9 +47,20 @@ export default function CatalogPage({ onAddToCart }) {
     return new Intl.NumberFormat("es-CO").format(Number(value));
   };
 
-  // Only available products
+  // Helper: define stock number (fallback compatible)
+  const getStock = (p) => {
+    const s = Number(p?.stock);
+    if (Number.isFinite(s)) return s;
+    // fallback: si no existe stock aún, usa available como 1/0
+    return p?.available === false ? 0 : 1;
+  };
+
+  const isInStock = (p) => getStock(p) > 0 && p?.available !== false;
+
+  // Only products in stock (stock > 0) and not manually disabled
   const availableProducts = useMemo(() => {
-    return (products || []).filter((p) => p?.available !== false);
+    return (products || []).filter((p) => isInStock(p));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [products]);
 
   // Compute dynamic price bounds from available products
@@ -67,7 +80,6 @@ export default function CatalogPage({ onAddToCart }) {
   // Initialize sliders once data arrives
   useEffect(() => {
     if (!priceBounds.max) return;
-
     setMinPrice((prev) => (prev ? prev : priceBounds.min));
     setMaxPrice((prev) => (prev ? prev : priceBounds.max));
   }, [priceBounds.min, priceBounds.max]);
@@ -91,13 +103,12 @@ export default function CatalogPage({ onAddToCart }) {
 
     const byPriceRange = (p) => {
       const v = Number(p?.price);
-      if (!Number.isFinite(v) || v <= 0) return true; // if no price, keep it
+      if (!Number.isFinite(v) || v <= 0) return true;
       return v >= safeMin && v <= safeMax;
     };
 
     const list = availableProducts.filter((p) => byType(p) && byPriceRange(p));
 
-    // ✅ sort by price (low -> high). No-price items go LAST.
     const sorted = [...list].sort((a, b) => {
       const pa = Number(a?.price);
       const pb = Number(b?.price);
@@ -152,7 +163,7 @@ export default function CatalogPage({ onAddToCart }) {
     };
   }, [priceBounds.min, priceBounds.max, safeMin, safeMax]);
 
-  // ===== Modal helpers (igual al landing) =====
+  // ===== Modal helpers
   const openProduct = (p) => {
     setActiveProduct(p);
     setActiveIndex(0);
@@ -170,7 +181,6 @@ export default function CatalogPage({ onAddToCart }) {
   const safeIndex = Math.min(activeIndex, maxIndex);
   const bigUrl = activeImages?.[safeIndex]?.asset?.url;
 
-  // cerrar con ESC + flechas (clamp)
   useEffect(() => {
     if (!open) return;
 
@@ -195,9 +205,7 @@ export default function CatalogPage({ onAddToCart }) {
       </header>
 
       {errorMsg && <p className="catalogError">{errorMsg}</p>}
-      {!errorMsg && products.length === 0 && (
-        <p className="catalogLoading">Cargando productos...</p>
-      )}
+      {!errorMsg && products.length === 0 && <p className="catalogLoading">Cargando productos...</p>}
 
       <section className="catalogLayout" aria-label="Catálogo con filtros">
         {/* ===== LEFT FILTERS ===== */}
@@ -251,16 +259,12 @@ export default function CatalogPage({ onAddToCart }) {
 
               <div className="priceTop">
                 <span className="priceHint">Desde</span>
-                <span className="priceValue">
-                  {priceBounds.max ? `${formatCOP(safeMin)} COP` : "—"}
-                </span>
+                <span className="priceValue">{priceBounds.max ? `${formatCOP(safeMin)} COP` : "—"}</span>
               </div>
 
               <div className="priceTop">
                 <span className="priceHint">Hasta</span>
-                <span className="priceValue">
-                  {priceBounds.max ? `${formatCOP(safeMax)} COP` : "—"}
-                </span>
+                <span className="priceValue">{priceBounds.max ? `${formatCOP(safeMax)} COP` : "—"}</span>
               </div>
 
               <div
@@ -335,49 +339,66 @@ export default function CatalogPage({ onAddToCart }) {
           <div className="catalogGrid" role="list" aria-label="Productos">
             {pagedItems.map((p) => {
               const url = p?.images?.[0]?.asset?.url;
-              const isAvailable = p?.available !== false;
+              const stock = getStock(p);
+              const canBuy = stock > 0 && p?.available !== false;
 
               return (
                 <article key={p._id} className="catalogCard" role="listitem">
-                  <div className="catalogMedia">
-                    <button
-                      className="catalogImgBtn"
-                      type="button"
-                      onClick={() => openProduct(p)}
-                      aria-label={`Ver ${p.title} en grande`}
-                    >
-                      {url ? (
-                        <img className="catalogImg" src={url} alt={p.title} loading="lazy" />
-                      ) : (
-                        <div className="catalogNoImg">Sin imagen</div>
-                      )}
-                    </button>
-                  </div>
+                <div className="catalogMedia">
+                  {/* ✅ Badge ZC arriba-izquierda */}
+                  {p?.productId ? <span className="mediaCode">{p.productId}</span> : null}
+
+                  <button
+                    className="catalogImgBtn"
+                    type="button"
+                    onClick={() => openProduct(p)}
+                    aria-label={`Ver ${p.title} en grande`}
+                  >
+                    {url ? (
+                      <img className="catalogImg" src={url} alt={p.title} loading="lazy" />
+                    ) : (
+                      <div className="catalogNoImg">Sin imagen</div>
+                    )}
+                  </button>
+                </div>
 
                   <div className="catalogBody">
-                    <h3 className="catalogName">{p.title}</h3>
+                    <div className="catalogTopRow">
+                      <h3 className="catalogName">{p.title}</h3>
+                      {p?.productId ? <span className="codeBadge">{p.productId}</span> : null}
+                    </div>
 
                     <p className="catalogDesc">{p.description || "Descripción pendiente."}</p>
 
-                    <p className="catalogPrice">
-                      <span>Precio:</span>{" "}
-                      <strong>{p?.price ? `${formatCOP(p.price)} COP` : "—"}</strong>
-                    </p>
+                    <div className="catalogMetaRow">
+                      <p className="catalogPrice">
+                        <span>Precio:</span>{" "}
+                        <strong>{p?.price ? `${formatCOP(p.price)} COP` : "—"}</strong>
+                      </p>
+
+                      <div className="unitsInline" aria-label="Unidades disponibles">
+                        <span className="unitsLabel">UN</span>
+                        <strong className="unitsValue">{stock}</strong>
+                      </div>
+                    </div>
 
                     <button
                       className="catalogBtn"
                       type="button"
-                      disabled={!isAvailable}
+                      disabled={!canBuy}
                       onClick={() =>
                         onAddToCart?.({
                           id: p._id,
                           title: p.title,
                           image: url || "",
                           price: p.price ?? null,
+                          // ✅ CLAVE: guardar stock en el carrito
+                          stock,
+                          productId: p.productId || null,
                         })
                       }
                     >
-                      {isAvailable ? "Añadir al carrito" : "Agotado"}
+                      {canBuy ? "Añadir al carrito" : "Agotado"}
                     </button>
                   </div>
                 </article>
@@ -397,12 +418,7 @@ export default function CatalogPage({ onAddToCart }) {
 
           {/* ===== Pagination (below grid) ===== */}
           <div className="pager" aria-label="Paginación">
-            <button
-              className="pagerBtn"
-              type="button"
-              onClick={() => goTo(safePage - 1)}
-              disabled={safePage <= 1}
-            >
+            <button className="pagerBtn" type="button" onClick={() => goTo(safePage - 1)} disabled={safePage <= 1}>
               ← Anterior
             </button>
 
@@ -436,31 +452,27 @@ export default function CatalogPage({ onAddToCart }) {
               )}
             </div>
 
-            <button
-              className="pagerBtn"
-              type="button"
-              onClick={() => goTo(safePage + 1)}
-              disabled={safePage >= totalPages}
-            >
+            <button className="pagerBtn" type="button" onClick={() => goTo(safePage + 1)} disabled={safePage >= totalPages}>
               Siguiente →
             </button>
           </div>
         </div>
       </section>
 
-      {/* ===== MODAL / LIGHTBOX (igual al landing) ===== */}
+      {/* ===== MODAL / LIGHTBOX ===== */}
       {open && (
         <>
           <div className="catalogModal" role="dialog" aria-modal="true" aria-label="Vista del producto">
             <div className="catalogModalCard">
               <div className="catalogModalHead">
-                <strong className="catalogModalTitle">{activeProduct?.title}</strong>
-                <button
-                  className="catalogModalClose"
-                  onClick={closeProduct}
-                  aria-label="Cerrar"
-                  type="button"
-                >
+                <div className="catalogModalHeadLeft">
+                  <strong className="catalogModalTitle">{activeProduct?.title}</strong>
+                  <div className="catalogModalBadges">
+                    {activeProduct?.productId ? <span className="codeBadge codeBadgeModal">{activeProduct.productId}</span> : null}
+                  </div>
+                </div>
+
+                <button className="catalogModalClose" onClick={closeProduct} aria-label="Cerrar" type="button">
                   ✕
                 </button>
               </div>
@@ -495,30 +507,42 @@ export default function CatalogPage({ onAddToCart }) {
               <div className="catalogModalBody">
                 <p className="catalogModalDesc">{activeProduct?.description || "Descripción pendiente."}</p>
 
-                <p className="catalogModalPrice">
-                  <span>Precio:</span>{" "}
-                  <strong>
-                    {formatCOP(activeProduct?.price)} {activeProduct?.price ? "COP" : ""}
-                  </strong>
-                </p>
+                <div className="catalogModalMeta">
+                  <p className="catalogModalPrice">
+                    <span>Precio:</span>{" "}
+                    <strong>
+                      {formatCOP(activeProduct?.price)} {activeProduct?.price ? "COP" : ""}
+                    </strong>
+                  </p>
+
+                  <div className="unitsInline unitsInlineModal" aria-label="Unidades disponibles">
+                    <span className="unitsLabel">UN</span>
+                    <strong className="unitsValue">{getStock(activeProduct)}</strong>
+                  </div>
+                </div>
 
                 <div className="catalogModalActions">
                   <button
                     className="catalogModalBtn"
                     type="button"
-                    disabled={activeProduct?.available === false}
+                    disabled={!(getStock(activeProduct) > 0 && activeProduct?.available !== false)}
                     onClick={() => {
                       const first = activeProduct?.images?.[0]?.asset?.url || "";
+                      const stock = getStock(activeProduct);
+
                       onAddToCart?.({
                         id: activeProduct?._id,
                         title: activeProduct?.title,
                         image: first,
                         price: activeProduct?.price ?? null,
+                        stock,
+                        productId: activeProduct?.productId || null,
                       });
+
                       closeProduct();
                     }}
                   >
-                    {activeProduct?.available === false ? "Agotado" : "Añadir al carrito"}
+                    {getStock(activeProduct) > 0 && activeProduct?.available !== false ? "Añadir al carrito" : "Agotado"}
                   </button>
 
                   <button className="catalogModalGhost" type="button" onClick={closeProduct}>

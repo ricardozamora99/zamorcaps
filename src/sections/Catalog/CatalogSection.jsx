@@ -22,9 +22,9 @@ export default function CatalogSection({ onAddToCart }) {
           description,
           available,
           price,
-          images[]{
-            asset->{url}
-          }
+          stock,
+          productId,
+          images[]{ asset->{url} }
         }
       `)
       .then((data) => setProducts(data || []))
@@ -35,20 +35,23 @@ export default function CatalogSection({ onAddToCart }) {
   }, []);
 
   // Helpers
-  const isAvail = (p) => p?.available !== false;
-
   const formatCOP = (value) => {
-    if (value === undefined || value === null || Number.isNaN(value)) return "—";
-    try {
-      return new Intl.NumberFormat("es-CO").format(value);
-    } catch {
-      return String(value);
-    }
+    if (value === undefined || value === null || Number.isNaN(Number(value))) return "—";
+    return new Intl.NumberFormat("es-CO").format(Number(value));
   };
 
-  // SOLO gorras disponibles, y SOLO 6
+  // 👇 Igual al CatalogPage: stock real + fallback
+  const getStock = (p) => {
+    const s = Number(p?.stock);
+    if (Number.isFinite(s)) return s;
+    return p?.available === false ? 0 : 1;
+  };
+
+  const isInStock = (p) => getStock(p) > 0 && p?.available !== false;
+
+  // SOLO productos disponibles (stock>0) y SOLO 6
   const gorras = useMemo(() => {
-    return (products || []).filter(isAvail).slice(0, 6);
+    return (products || []).filter(isInStock).slice(0, 6);
   }, [products]);
 
   const openProduct = (p) => {
@@ -113,7 +116,8 @@ export default function CatalogSection({ onAddToCart }) {
       <div className={styles.grid}>
         {gorras.map((p) => {
           const url = p?.images?.[0]?.asset?.url;
-          const available = isAvail(p);
+          const stock = getStock(p);
+          const canBuy = stock > 0 && p?.available !== false;
 
           return (
             <article key={p._id} className={styles.card}>
@@ -126,12 +130,7 @@ export default function CatalogSection({ onAddToCart }) {
                   aria-label={`Ver ${p.title} en grande`}
                 >
                   {url ? (
-                    <img
-                      className={styles.img}
-                      src={url}
-                      alt={p.title}
-                      loading="lazy"
-                    />
+                    <img className={styles.img} src={url} alt={p.title} loading="lazy" />
                   ) : (
                     <div className={styles.noImg}>Sin imagen</div>
                   )}
@@ -139,11 +138,9 @@ export default function CatalogSection({ onAddToCart }) {
 
                 <div className={styles.badges}>
                   <span
-                    className={`${styles.badge} ${
-                      available ? styles.badgeOk : styles.badgeOff
-                    }`}
+                    className={`${styles.badge} ${canBuy ? styles.badgeOk : styles.badgeOff}`}
                   >
-                    {available ? "Disponible" : "Agotado"}
+                    {canBuy ? "Disponible" : "Agotado"}
                   </span>
                 </div>
               </div>
@@ -164,21 +161,23 @@ export default function CatalogSection({ onAddToCart }) {
                   </span>
                 </p>
 
-                {/* ✅ Igual que CatalogPage: 1 solo botón full-width */}
+                {/* ✅ IMPORTANTE: pasar stock y productId */}
                 <button
                   className={styles.ctaFull}
                   type="button"
-                  disabled={!available}
+                  disabled={!canBuy}
                   onClick={() =>
                     onAddToCart?.({
                       id: p._id,
                       title: p.title,
                       image: url || "",
                       price: p.price ?? null,
+                      stock,
+                      productId: p.productId || null,
                     })
                   }
                 >
-                  {available ? "Añadir al carrito" : "Agotado"}
+                  {canBuy ? "Añadir al carrito" : "Agotado"}
                 </button>
               </div>
             </article>
@@ -275,21 +274,24 @@ export default function CatalogSection({ onAddToCart }) {
                   <button
                     className={styles.catalogModalBtn}
                     type="button"
-                    disabled={activeProduct?.available === false}
+                    disabled={!isInStock(activeProduct)}
                     onClick={() => {
                       const first = activeProduct?.images?.[0]?.asset?.url || "";
+                      const stock = getStock(activeProduct);
+
                       onAddToCart?.({
                         id: activeProduct?._id,
                         title: activeProduct?.title,
                         image: first,
                         price: activeProduct?.price ?? null,
+                        stock,
+                        productId: activeProduct?.productId || null,
                       });
+
                       closeProduct();
                     }}
                   >
-                    {activeProduct?.available === false
-                      ? "Agotado"
-                      : "Añadir al carrito"}
+                    {isInStock(activeProduct) ? "Añadir al carrito" : "Agotado"}
                   </button>
 
                   <button

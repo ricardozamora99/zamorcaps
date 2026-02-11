@@ -2,7 +2,7 @@
 .catalogPage{
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0px; /* espacio para navbar fijo */
+  padding: 0px;
 }
 
 .catalogHead{
@@ -146,7 +146,6 @@
   margin-top: 6px;
 }
 
-/* Base track + highlighted selection */
 .rangeTrack{
   position: absolute;
   left: 0;
@@ -167,7 +166,6 @@
     );
 }
 
-/* Two sliders stacked */
 .priceRange{
   position: absolute;
   left: 0;
@@ -179,10 +177,9 @@
   background: transparent;
   -webkit-appearance: none;
   appearance: none;
-  pointer-events: none; /* enable only thumbs */
+  pointer-events: none;
 }
 
-/* thumbs clickable */
 .priceRange::-webkit-slider-thumb{
   -webkit-appearance: none;
   appearance: none;
@@ -206,7 +203,6 @@
   cursor: pointer;
 }
 
-/* hide native track */
 .priceRange::-webkit-slider-runnable-track{
   height: 6px;
   background: transparent;
@@ -216,7 +212,6 @@
   background: transparent;
 }
 
-/* Ensure max thumb is above when crossing */
 .priceRangeMin{ z-index: 2; }
 .priceRangeMax{ z-index: 3; }
 
@@ -269,6 +264,29 @@
   gap: 14px;
 }
 
+/* ✅ ZC badge arriba a la izquierda (sobre la foto) */
+.mediaCode{
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 3;
+
+  padding: 4px 8px;
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 1000;
+  letter-spacing: 0.03em;
+
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(0,0,0,0.14);
+  color: rgba(0,0,0,0.72);
+
+  box-shadow: 0 10px 18px rgba(0,0,0,0.10);
+  pointer-events: none; /* no estorba el click de la imagen */
+}
+
+
 /* Responsive */
 @media (max-width: 1100px){
   .catalogLayout{
@@ -314,6 +332,7 @@
 }
 
 .catalogMedia{
+  position: relative;
   height: 180px;
   background: rgba(0,0,0,0.03);
 }
@@ -348,8 +367,18 @@
   font-weight: 900;
 }
 
+
+
+/* Product body */
 .catalogBody{
   padding: 12px;
+}
+
+.catalogTopRow{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .catalogName{
@@ -357,6 +386,18 @@
   font-size: 15px;
   font-weight: 1000;
   color: rgba(0,0,0,0.88);
+}
+
+/* Small code badge (productId) */
+.codeBadge{
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.10);
+  font-weight: 1000;
+  font-size: 11px;
+  color: rgba(0,0,0,0.62);
+  white-space: nowrap;
 }
 
 .catalogDesc{
@@ -371,14 +412,44 @@
   overflow: hidden;
 }
 
+.catalogMetaRow{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
 .catalogPrice{
-  margin: 0 0 10px;
+  margin: 0;
   font-weight: 1000;
   color: rgba(0,0,0,0.75);
 }
 .catalogPrice span{
   color: rgba(0,0,0,0.55);
   margin-right: 6px;
+}
+
+/* ✅ Inline units block */
+.unitsInline{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 12px;
+  background: rgba(203,14,14,0.05);
+  border: 1px solid rgba(203,14,14,0.18);
+}
+.unitsLabel{
+  font-weight: 1000;
+  font-size: 11px;
+  color: rgba(203,14,14,0.85);
+  letter-spacing: 0.04em;
+}
+.unitsValue{
+  font-weight: 1100;
+  color: rgba(203,14,14,0.95);
+  font-size: 13px;
 }
 
 .catalogBtn{
@@ -528,6 +599,24 @@
   border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 
+.catalogModalHeadLeft{
+  display: grid;
+  gap: 6px;
+}
+
+.catalogModalBadges{
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+
+
+.codeBadgeModal{
+  background: rgba(0,0,0,0.04);
+}
+
 .catalogModalTitle{
   font-weight: 1000;
   color: rgba(0,0,0,0.88);
@@ -620,6 +709,17 @@
   overflow: auto;
 }
 
+.catalogModalMeta{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.unitsInlineModal{
+  padding: 8px 12px;
+}
+
 .catalogModalPrice{
   margin: 0;
   font-weight: 1000;
@@ -689,5 +789,9 @@
   }
   .catalogModalActions{
     grid-template-columns: 1fr;
+  }
+  .catalogModalMeta{
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

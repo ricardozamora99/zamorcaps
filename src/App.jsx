@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar/Navbar";
@@ -16,7 +16,6 @@ import CatalogPage from "./pages/Catalog/CatalogPage";
 
 const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER;
 
-
 export default function App() {
   const { pathname } = useLocation();
   const isCatalogPage = pathname === "/catalogo";
@@ -27,7 +26,17 @@ export default function App() {
   // Carrito global
   const [cartOpen, setCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
-  // cartItems: [{ id, title, image, qty, price? }]
+  // cartItems: [{ id, title, image, qty, price?, stock?, productId? }]
+
+  // ✅ Toast global para mostrar en Navbar cuando hay límite
+  const [cartToast, setCartToast] = useState("");
+  const toastTimerRef = useRef(null);
+
+  const showCartToast = (msg) => {
+    setCartToast(msg);
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = setTimeout(() => setCartToast(""), 2200);
+  };
 
   const closeMenu = () => {
     setMenuOpen(false);
@@ -38,6 +47,12 @@ export default function App() {
     closeMenu();
     setCartOpen(false);
   };
+
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const onResize = () => {
@@ -56,15 +71,48 @@ export default function App() {
   );
 
   const addToCart = (product) => {
-    // product: { id, title, image, price? }
+    // product: { id, title, image, price?, stock?, productId? }
     setCartItems((prev) => {
       const idx = prev.findIndex((x) => x.id === product.id);
+
+      const incomingStock = Number(product?.stock);
+      const hasStock = Number.isFinite(incomingStock);
+      const limit = hasStock ? Math.max(0, incomingStock) : null;
+
       if (idx >= 0) {
         const copy = [...prev];
-        copy[idx] = { ...copy[idx], qty: (copy[idx].qty || 1) + 1 };
+        const current = copy[idx];
+        const nextQty = (current.qty || 1) + 1;
+
+        if (limit !== null && nextQty > limit) {
+          showCartToast(`No puedes agregar más. Stock disponible: ${limit}`);
+          return prev;
+        }
+
+        copy[idx] = {
+          ...current,
+          // por si el stock llega ahora y antes no existía
+          stock: limit !== null ? limit : current.stock,
+          productId: product.productId ?? current.productId ?? null,
+          qty: nextQty,
+        };
         return copy;
       }
-      return [...prev, { ...product, qty: 1 }];
+
+      const initialQty = 1;
+      if (limit !== null && initialQty > limit) {
+        showCartToast(`No disponible. Stock: ${limit}`);
+        return prev;
+      }
+
+      return [
+        ...prev,
+        {
+          ...product,
+          stock: limit !== null ? limit : product.stock,
+          qty: 1,
+        },
+      ];
     });
 
     // UX: abrir carrito al añadir
@@ -73,7 +121,20 @@ export default function App() {
 
   const setQty = (id, nextQty) => {
     setCartItems((prev) => {
-      const q = Math.max(0, Number(nextQty || 0));
+      const qRaw = Math.max(0, Number(nextQty || 0));
+      const item = prev.find((x) => x.id === id);
+      if (!item) return prev;
+
+      const s = Number(item?.stock);
+      const hasStock = Number.isFinite(s);
+      const limit = hasStock ? Math.max(0, s) : null;
+
+      const q = limit !== null ? Math.min(qRaw, limit) : qRaw;
+
+      if (limit !== null && qRaw > limit) {
+        showCartToast(`No puedes agregar más. Stock disponible: ${limit}`);
+      }
+
       if (q === 0) return prev.filter((x) => x.id !== id);
       return prev.map((x) => (x.id === id ? { ...x, qty: q } : x));
     });
@@ -115,6 +176,8 @@ export default function App() {
         removeFromCart={removeFromCart}
         buildWhatsAppUrl={buildWhatsAppUrl}
         closeAll={closeAll}
+        // ✅ toast
+        cartToast={cartToast}
       />
 
       <Routes>
@@ -132,10 +195,7 @@ export default function App() {
           }
         />
 
-        <Route
-          path="/catalogo"
-          element={<CatalogPage onAddToCart={addToCart} />}
-        />
+        <Route path="/catalogo" element={<CatalogPage onAddToCart={addToCart} />} />
       </Routes>
 
       <Footer />

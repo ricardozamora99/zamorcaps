@@ -57,6 +57,15 @@ export default {
       type: "boolean",
       initialValue: true,
     },
+    {
+  name: "stock",
+  title: "Unidades disponibles",
+  type: "number",
+  description: "Cantidad en inventario. Si llega a 0, se considera sin stock.",
+  initialValue: 1,
+  validation: (Rule) =>
+    Rule.required().min(0).integer().error("Stock debe ser un entero >= 0"),
+},
         // ✅ NUEVO: ID interno propio (lo llenas con tu script)
     {
       name: "productId",

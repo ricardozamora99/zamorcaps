@@ -499,3 +499,23 @@
   cursor: pointer;
 }
 .cartRemove:hover{ filter: brightness(0.96); }
+
+/* ===== Toast / bubble for cart ===== */
+.cartToast{
+  margin: 10px 16px 0;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(203,14,14,0.22);
+  background: rgba(203,14,14,0.08);
+  color: rgba(203,14,14,0.96);
+  font-weight: 900;
+  font-size: 13px;
+  line-height: 1.25;
+
+  animation: zcPop 180ms ease;
+}
+
+@keyframes zcPop{
+  from{ transform: translateY(-6px); opacity: 0; }
+  to{ transform: translateY(0); opacity: 1; }
+}
