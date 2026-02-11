@@ -6,7 +6,7 @@ const client = createClient({
   projectId: "6qntx754",
   dataset: "production",
   apiVersion: "2023-10-01",
-  token: process.env.SANITY_TOKEN,
+  token: process.env.SANITY_WRITE_TOKEN,
   useCdn: false,
 });
 
