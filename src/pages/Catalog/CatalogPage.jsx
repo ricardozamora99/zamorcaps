@@ -258,32 +258,60 @@ export default function CatalogPage({ onAddToCart }) {
     </div>
 
     {/* --- Tu contenido igual --- */}
-    <div className="filtersBlock">
-      <div className="filtersLabel">Tipo</div>
-      <div className="segmented" role="tablist" aria-label="Filtro por tipo">
-        <button
-          className={`segBtn ${type === "all" ? "segActive" : ""}`}
-          type="button"
-          onClick={() => { setType("all"); setPage(1); }}
-        >
-          Todos
-        </button>
-        <button
-          className={`segBtn ${type === "cap" ? "segActive" : ""}`}
-          type="button"
-          onClick={() => { setType("cap"); setPage(1); }}
-        >
-          Gorras
-        </button>
-        <button
-          className={`segBtn ${type === "bag" ? "segActive" : ""}`}
-          type="button"
-          onClick={() => { setType("bag"); setPage(1); }}
-        >
-          Bolsos
-        </button>
-      </div>
-    </div>
+<div className="filtersBlock">
+  <div className="filtersLabel">Tipo</div>
+
+  <div className="segmented" role="tablist" aria-label="Filtro por tipo">
+    <button
+      className={`segBtn ${type === "all" ? "segActive" : ""}`}
+      type="button"
+      onClick={() => {
+        setType("all");
+        setPage(1);
+        // opcional: cerrar filtros en mobile
+        // setFiltersOpen(false);
+      }}
+    >
+      Todos
+    </button>
+
+    <button
+      className={`segBtn ${type === "cap" ? "segActive" : ""}`}
+      type="button"
+      onClick={() => {
+        setType("cap");
+        setPage(1);
+        // setFiltersOpen(false);
+      }}
+    >
+      Gorras
+    </button>
+
+    <button
+      className={`segBtn ${type === "bag" ? "segActive" : ""}`}
+      type="button"
+      onClick={() => {
+        setType("bag");
+        setPage(1);
+        // setFiltersOpen(false);
+      }}
+    >
+      Bolsos
+    </button>
+
+    <button
+      className={`segBtn ${type === "carriel" ? "segActive" : ""}`}
+      type="button"
+      onClick={() => {
+        setType("carriel");
+        setPage(1);
+        // setFiltersOpen(false);
+      }}
+    >
+      Carrieles
+    </button>
+  </div>
+</div>
 
     <div className="filtersBlock">
       <div className="filtersLabel">Rango de precio</div>

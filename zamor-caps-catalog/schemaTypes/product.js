@@ -12,8 +12,6 @@ export default {
       validation: (Rule) => Rule.required(),
     },
 
-
-
     {
       name: "category",
       title: "Categoría",
@@ -22,6 +20,7 @@ export default {
         list: [
           { title: "Gorra", value: "cap" },
           { title: "Bolso", value: "bag" },
+          { title: "Carriel", value: "carriel" }, // ✅ NUEVO
         ],
         layout: "radio",
       },
@@ -48,7 +47,8 @@ export default {
       title: "Fotos",
       type: "array",
       of: [{ type: "image", options: { hotspot: true } }],
-      validation: (Rule) => Rule.required().min(1).error("Sube al menos una foto"),
+      validation: (Rule) =>
+        Rule.required().min(1).error("Sube al menos una foto"),
     },
 
     {
@@ -57,24 +57,25 @@ export default {
       type: "boolean",
       initialValue: true,
     },
+
     {
-  name: "stock",
-  title: "Unidades disponibles",
-  type: "number",
-  description: "Cantidad en inventario. Si llega a 0, se considera sin stock.",
-  initialValue: 1,
-  validation: (Rule) =>
-    Rule.required().min(0).integer().error("Stock debe ser un entero >= 0"),
-},
-        // ✅ NUEVO: ID interno propio (lo llenas con tu script)
+      name: "stock",
+      title: "Unidades disponibles",
+      type: "number",
+      description: "Cantidad en inventario. Si llega a 0, se considera sin stock.",
+      initialValue: 1,
+      validation: (Rule) =>
+        Rule.required().min(0).integer().error("Stock debe ser un entero >= 0"),
+    },
+
+    // ✅ ID interno automático
     {
       name: "productId",
       title: "ID del producto",
       type: "string",
       description: "ID interno (ej: ZC-0001)",
       readOnly: true,
-      // ❌ QUITA la validación required
-     // validation: (Rule) => Rule.required(),
+      // validation removida para permitir generación automática
     },
   ],
 

@@ -21,6 +21,7 @@ export default function CatalogSection({ onAddToCart }) {
           title,
           description,
           available,
+          category,        // ✅ IMPORTANTE (para separar gorras/bolsos/carrieles)
           price,
           stock,
           productId,
@@ -40,7 +41,7 @@ export default function CatalogSection({ onAddToCart }) {
     return new Intl.NumberFormat("es-CO").format(Number(value));
   };
 
-  // 👇 Igual al CatalogPage: stock real + fallback
+  // stock real + fallback
   const getStock = (p) => {
     const s = Number(p?.stock);
     if (Number.isFinite(s)) return s;
@@ -49,10 +50,21 @@ export default function CatalogSection({ onAddToCart }) {
 
   const isInStock = (p) => getStock(p) > 0 && p?.available !== false;
 
-  // SOLO productos disponibles (stock>0) y SOLO 6
+  // ✅ SOLO productos disponibles
+  const available = useMemo(() => (products || []).filter(isInStock), [products]);
+
+  // ✅ 3 secciones (cada una con unos cuantos)
   const gorras = useMemo(() => {
-    return (products || []).filter(isInStock).slice(0, 6);
-  }, [products]);
+    return available.filter((p) => p?.category === "cap").slice(0, 6);
+  }, [available]);
+
+  const bolsos = useMemo(() => {
+    return available.filter((p) => p?.category === "bag").slice(0, 6);
+  }, [available]);
+
+  const carrieles = useMemo(() => {
+    return available.filter((p) => p?.category === "carriel").slice(0, 6);
+  }, [available]);
 
   const openProduct = (p) => {
     setActiveProduct(p);
@@ -71,7 +83,7 @@ export default function CatalogSection({ onAddToCart }) {
   const safeIndex = Math.min(activeIndex, maxIndex);
   const bigUrl = activeImages?.[safeIndex]?.asset?.url;
 
-  // cerrar con ESC + flechas (con clamp)
+  // cerrar con ESC + flechas
   useEffect(() => {
     if (!open) return;
 
@@ -88,12 +100,79 @@ export default function CatalogSection({ onAddToCart }) {
 
   const navigate = useNavigate();
 
+  // ✅ Reutilizable: pinta cards
+  const renderGrid = (list) => (
+    <div className={styles.grid}>
+      {list.map((p) => {
+        const url = p?.images?.[0]?.asset?.url;
+        const stock = getStock(p);
+        const canBuy = stock > 0 && p?.available !== false;
+
+        return (
+          <article key={p._id} className={styles.card}>
+            <div className={styles.media}>
+              <button
+                className={styles.imgBtn}
+                type="button"
+                onClick={() => openProduct(p)}
+                aria-label={`Ver ${p.title} en grande`}
+              >
+                {url ? (
+                  <img className={styles.img} src={url} alt={p.title} loading="lazy" />
+                ) : (
+                  <div className={styles.noImg}>Sin imagen</div>
+                )}
+              </button>
+
+              <div className={styles.badges}>
+                <span className={`${styles.badge} ${canBuy ? styles.badgeOk : styles.badgeOff}`}>
+                  {canBuy ? "Disponible" : "Agotado"}
+                </span>
+              </div>
+            </div>
+
+            <div className={styles.body}>
+              <h4 className={styles.name}>{p.title}</h4>
+
+              {p.description ? (
+                <p className={styles.desc}>{p.description}</p>
+              ) : (
+                <p className={styles.descMuted}>Descripción pendiente.</p>
+              )}
+
+              <p className={styles.priceLine}>
+                <span className={styles.priceLabel}>Precio:</span>{" "}
+                <span className={styles.priceValue}>
+                  {formatCOP(p.price)} {p.price ? "COP" : ""}
+                </span>
+              </p>
+
+              <button
+                className={styles.ctaFull}
+                type="button"
+                disabled={!canBuy}
+                onClick={() =>
+                  onAddToCart?.({
+                    id: p._id,
+                    title: p.title,
+                    image: url || "",
+                    price: p.price ?? null,
+                    stock,
+                    productId: p.productId || null,
+                  })
+                }
+              >
+                {canBuy ? "Añadir al carrito" : "Agotado"}
+              </button>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  );
+
   return (
-    <section
-      id="catalogo"
-      className={`section ${styles.section}`}
-      aria-labelledby="catalogo-title"
-    >
+    <section id="catalogo" className={`section ${styles.section}`} aria-labelledby="catalogo-title">
       <header className={styles.head}>
         <p className={styles.kicker}>Catálogo</p>
         <h2 id="catalogo-title" className={styles.h2}>
@@ -104,125 +183,36 @@ export default function CatalogSection({ onAddToCart }) {
         </p>
       </header>
 
-      <h3 id="gorras" className={styles.title}>
-        GORRAS
-      </h3>
-
       {errorMsg && <p className={styles.stateError}>{errorMsg}</p>}
-      {!errorMsg && products.length === 0 && (
-        <p className={styles.stateLoading}>Cargando productos...</p>
-      )}
+      {!errorMsg && products.length === 0 && <p className={styles.stateLoading}>Cargando productos...</p>}
 
-      <div className={styles.grid}>
-        {gorras.map((p) => {
-          const url = p?.images?.[0]?.asset?.url;
-          const stock = getStock(p);
-          const canBuy = stock > 0 && p?.available !== false;
+      {/* ===== GORRAS ===== */}
+      <h3 id="gorras" className={styles.title}>GORRAS</h3>
+      {gorras.length ? renderGrid(gorras) : <p className={styles.description}>Próximamente disponibles.</p>}
 
-          return (
-            <article key={p._id} className={styles.card}>
-              <div className={styles.media}>
-                {/* SOLO IMAGEN abre modal */}
-                <button
-                  className={styles.imgBtn}
-                  type="button"
-                  onClick={() => openProduct(p)}
-                  aria-label={`Ver ${p.title} en grande`}
-                >
-                  {url ? (
-                    <img className={styles.img} src={url} alt={p.title} loading="lazy" />
-                  ) : (
-                    <div className={styles.noImg}>Sin imagen</div>
-                  )}
-                </button>
+      {/* ===== BOLSOS ===== */}
+      <h3 id="bolsos" className={styles.title}>BOLSOS</h3>
+      {bolsos.length ? renderGrid(bolsos) : <p className={styles.description}>Próximamente disponibles.</p>}
 
-                <div className={styles.badges}>
-                  <span
-                    className={`${styles.badge} ${canBuy ? styles.badgeOk : styles.badgeOff}`}
-                  >
-                    {canBuy ? "Disponible" : "Agotado"}
-                  </span>
-                </div>
-              </div>
-
-              <div className={styles.body}>
-                <h4 className={styles.name}>{p.title}</h4>
-
-                {p.description ? (
-                  <p className={styles.desc}>{p.description}</p>
-                ) : (
-                  <p className={styles.descMuted}>Descripción pendiente.</p>
-                )}
-
-                <p className={styles.priceLine}>
-                  <span className={styles.priceLabel}>Precio:</span>{" "}
-                  <span className={styles.priceValue}>
-                    {formatCOP(p.price)} {p.price ? "COP" : ""}
-                  </span>
-                </p>
-
-                {/* ✅ IMPORTANTE: pasar stock y productId */}
-                <button
-                  className={styles.ctaFull}
-                  type="button"
-                  disabled={!canBuy}
-                  onClick={() =>
-                    onAddToCart?.({
-                      id: p._id,
-                      title: p.title,
-                      image: url || "",
-                      price: p.price ?? null,
-                      stock,
-                      productId: p.productId || null,
-                    })
-                  }
-                >
-                  {canBuy ? "Añadir al carrito" : "Agotado"}
-                </button>
-              </div>
-            </article>
-          );
-        })}
-      </div>
-
-
-
-      <h3 id="bolsos" className={styles.title}>
-        BOLSOS
-      </h3>
-      <p className={styles.description}>Próximamente disponibles.</p>
+      {/* ===== CARRIELES ===== */}
+      <h3 id="carrieles" className={styles.title}>CARRIELES</h3>
+      {carrieles.length ? renderGrid(carrieles) : <p className={styles.description}>Próximamente disponibles.</p>}
 
       {/* ===== MODAL / LIGHTBOX ===== */}
       {open && (
         <>
-          <div
-            className={styles.catalogModal}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Vista del producto"
-          >
+          <div className={styles.catalogModal} role="dialog" aria-modal="true" aria-label="Vista del producto">
             <div className={styles.catalogModalCard}>
               <div className={styles.catalogModalHead}>
-                <strong className={styles.catalogModalTitle}>
-                  {activeProduct?.title}
-                </strong>
-                <button
-                  className={styles.catalogModalClose}
-                  onClick={closeProduct}
-                  aria-label="Cerrar"
-                  type="button"
-                >
+                <strong className={styles.catalogModalTitle}>{activeProduct?.title}</strong>
+                <button className={styles.catalogModalClose} onClick={closeProduct} aria-label="Cerrar" type="button">
                   ✕
                 </button>
               </div>
 
               <div className={styles.catalogModalMedia}>
                 {bigUrl ? (
-                  <img
-                    className={styles.catalogModalImg}
-                    src={bigUrl}
-                    alt={activeProduct?.title || "Producto"}
-                  />
+                  <img className={styles.catalogModalImg} src={bigUrl} alt={activeProduct?.title || "Producto"} />
                 ) : (
                   <div className={styles.catalogModalNoImg}>Sin imagen</div>
                 )}
@@ -248,15 +238,12 @@ export default function CatalogSection({ onAddToCart }) {
               </div>
 
               <div className={styles.catalogModalBody}>
-                <p className={styles.catalogModalDesc}>
-                  {activeProduct?.description || "Descripción pendiente."}
-                </p>
+                <p className={styles.catalogModalDesc}>{activeProduct?.description || "Descripción pendiente."}</p>
 
                 <p className={styles.catalogModalPrice}>
                   <span>Precio:</span>{" "}
                   <strong>
-                    {formatCOP(activeProduct?.price)}{" "}
-                    {activeProduct?.price ? "COP" : ""}
+                    {formatCOP(activeProduct?.price)} {activeProduct?.price ? "COP" : ""}
                   </strong>
                 </p>
 
@@ -284,11 +271,7 @@ export default function CatalogSection({ onAddToCart }) {
                     {isInStock(activeProduct) ? "Añadir al carrito" : "Agotado"}
                   </button>
 
-                  <button
-                    className={styles.catalogModalGhost}
-                    type="button"
-                    onClick={closeProduct}
-                  >
+                  <button className={styles.catalogModalGhost} type="button" onClick={closeProduct}>
                     Seguir viendo
                   </button>
                 </div>
@@ -296,15 +279,11 @@ export default function CatalogSection({ onAddToCart }) {
             </div>
           </div>
 
-          <button
-            className={styles.catalogBackdrop}
-            onClick={closeProduct}
-            aria-label="Cerrar vista"
-            type="button"
-          />
+          <button className={styles.catalogBackdrop} onClick={closeProduct} aria-label="Cerrar vista" type="button" />
         </>
       )}
-            {/* Botón debajo del catálogo */}
+
+      {/* Botón debajo del catálogo */}
       <div className={styles.bottomRow}>
         <button
           className={styles.viewAllBtn}
