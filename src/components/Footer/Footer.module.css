@@ -285,26 +285,38 @@
 }
 
 /* ===== RESPONSIVE ===== */
+
+/* TABLET */
 @media (max-width: 900px){
+
   .top{
     flex-direction: column;
     align-items: flex-start;
+    gap: 14px;
   }
+
   .nav{
     justify-content: flex-start;
   }
+
+  /* 👇 2 columnas en tablet en vez de 1 gigante */
   .grid{
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 12px;
   }
+
   .credits{
     white-space: normal;
   }
+
 }
 
-/* ✅ Mobile polish: menos texto, más compacto */
+
+/* MOBILE */
 @media (max-width: 560px){
+
   .footer{
-    padding: 18px 0 14px;
+    padding: 16px 0 12px;
   }
 
   .inner{
@@ -319,29 +331,31 @@
     font-size: 11px;
     letter-spacing: 0.05em;
   }
+
   .subDesktop{ display: none; }
   .subMobile{ display: inline; }
 
-  /* Oculta trust pills (son lo que más “carga”) */
+  /* trust pills cargan mucho el layout */
   .trust{
     display: none;
   }
 
-  /* Nav en 2 columnas, más compacto */
+  /* nav compacto */
   .nav{
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px 12px;
-    justify-content: flex-start;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 6px 12px;
   }
+
   .link{
     font-size: 11px;
     padding-bottom: 4px;
-    letter-spacing: 0.08em;
   }
 
+  /* grid más compacto */
   .grid{
+    grid-template-columns: 1fr;
     gap: 10px;
     padding-top: 12px;
   }
@@ -357,11 +371,11 @@
 
   .text{
     font-size: 12px;
-    line-height: 1.5;
+    line-height: 1.45;
   }
 
   .whatsBtn{
-    padding: 11px 12px;
+    padding: 10px 12px;
     font-size: 13px;
   }
 
@@ -369,15 +383,16 @@
     font-size: 11px;
   }
 
-  /* Oculta microLinks en mobile para que no sea “muro de texto” */
+  /* micro links solo ocupan espacio */
   .microLinks{
     display: none;
   }
 
   .bottom{
-    margin-top: 12px;
+    margin-top: 10px;
     padding-top: 10px;
-    gap: 8px;
+    gap: 6px;
+    flex-direction: column;
   }
 
   .copy{
@@ -385,7 +400,18 @@
   }
 
   .disclaimer{
-    font-size: 12px;
-    line-height: 1.4;
+    font-size: 11.5px;
+    line-height: 1.35;
   }
+
+}
+
+
+/* EXTRA SMALL */
+@media (max-width: 360px){
+
+  .nav{
+    grid-template-columns: 1fr;
+  }
+
 }

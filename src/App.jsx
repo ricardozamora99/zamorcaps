@@ -187,9 +187,9 @@ export default function App() {
             <main>
               <HeroSection closeMenu={closeAll} />
               <AboutSection />
+              <HowToBuySection />
               <CatalogSection onAddToCart={addToCart} />
               <RecommendationsSection />
-              <HowToBuySection />
               <ContactSection />
             </main>
           }

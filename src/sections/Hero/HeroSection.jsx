@@ -31,7 +31,7 @@ export default function HeroSection({ closeMenu }) {
                 navigate("/catalogo");
               }}
             >
-              VER CATÁLOGO
+              VER CATÁLOGO COMPLETO
             </button>
 
             <a href="#catalogo" className={styles.btnGhost} onClick={closeMenu}>

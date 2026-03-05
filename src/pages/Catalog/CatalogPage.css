@@ -46,6 +46,15 @@
   top: 130px;
 }
 
+/* ===== Mobile Filters Bar (hidden on desktop by default) ===== */
+.filtersBar{
+  display: none;
+}
+
+.filtersBackdrop{
+  display: none;
+}
+
 .filtersCard{
   background: rgba(255,255,255,0.92);
   border: 1px solid rgba(0,0,0,0.08);
@@ -68,6 +77,21 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: rgba(0,0,0,0.72);
+}
+
+.filtersClose{
+  display: none; /* solo mobile */
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0.95);
+  cursor: pointer;
+  font-weight: 1000;
+}
+.filtersClose:hover{
+  border-color: rgba(203,14,14,0.30);
+  background: rgba(203,14,14,0.06);
 }
 
 .filtersReset{
@@ -203,14 +227,8 @@
   cursor: pointer;
 }
 
-.priceRange::-webkit-slider-runnable-track{
-  height: 6px;
-  background: transparent;
-}
-.priceRange::-moz-range-track{
-  height: 6px;
-  background: transparent;
-}
+.priceRange::-webkit-slider-runnable-track{ height: 6px; background: transparent; }
+.priceRange::-moz-range-track{ height: 6px; background: transparent; }
 
 .priceRangeMin{ z-index: 2; }
 .priceRangeMax{ z-index: 3; }
@@ -252,6 +270,28 @@
   color: rgba(0,0,0,0.55);
 }
 
+/* Mobile actions inside sheet */
+.filtersActions{
+  display: none;
+  gap: 10px;
+  margin-top: 14px;
+}
+.filtersApply{
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.06);
+  background: #cb0e0e;
+  color: #fff;
+  font-weight: 1000;
+  cursor: pointer;
+}
+.filtersApply:hover{ filter: brightness(0.96); }
+
+.filtersResetWide{
+  width: 100%;
+}
+
 /* ===== Right side ===== */
 .catalogRight{
   min-width: 0;
@@ -270,22 +310,17 @@
   top: 10px;
   left: 10px;
   z-index: 3;
-
   padding: 4px 8px;
   border-radius: 999px;
-
   font-size: 10px;
   font-weight: 1000;
   letter-spacing: 0.03em;
-
   background: rgba(255,255,255,0.92);
   border: 1px solid rgba(0,0,0,0.14);
   color: rgba(0,0,0,0.72);
-
   box-shadow: 0 10px 18px rgba(0,0,0,0.10);
-  pointer-events: none; /* no estorba el click de la imagen */
+  pointer-events: none;
 }
-
 
 /* Responsive */
 @media (max-width: 1100px){
@@ -306,12 +341,12 @@
   .catalogGrid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* ✅ Mobile: 2 en 2 (NO 1 columna) */
+/* ✅ Mobile: 2 en 2 */
 @media (max-width: 560px){
   .catalogGrid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* ultra small: ya aquí sí conviene 1 */
+/* ultra small */
 @media (max-width: 380px){
   .catalogGrid{ grid-template-columns: 1fr; }
 }
@@ -367,8 +402,6 @@
   font-weight: 900;
 }
 
-
-
 /* Product body */
 .catalogBody{
   padding: 12px;
@@ -388,7 +421,6 @@
   color: rgba(0,0,0,0.88);
 }
 
-/* Small code badge (productId) */
 .codeBadge{
   padding: 6px 9px;
   border-radius: 999px;
@@ -430,7 +462,6 @@
   margin-right: 6px;
 }
 
-/* ✅ Inline units block */
 .unitsInline{
   display: inline-flex;
   align-items: center;
@@ -561,9 +592,8 @@
 }
 
 /* =========================================================
-   MODAL / LIGHTBOX (Catalog Page)
+   MODAL / LIGHTBOX
    ========================================================= */
-
 .catalogModal{
   position: fixed;
   inset: 0;
@@ -594,7 +624,6 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-
   padding: 12px 14px;
   border-bottom: 1px solid rgba(0,0,0,0.08);
 }
@@ -611,11 +640,7 @@
   align-items: center;
 }
 
-
-
-.codeBadgeModal{
-  background: rgba(0,0,0,0.04);
-}
+.codeBadgeModal{ background: rgba(0,0,0,0.04); }
 
 .catalogModalTitle{
   font-weight: 1000;
@@ -662,7 +687,6 @@
   color: rgba(0,0,0,0.55);
 }
 
-/* Nav arrows */
 .catalogNavLeft,
 .catalogNavRight{
   position: absolute;
@@ -693,7 +717,6 @@
   cursor: not-allowed;
 }
 
-/* Body */
 .catalogModalBody{
   padding: 12px 14px 14px;
   display: grid;
@@ -716,9 +739,7 @@
   gap: 10px;
 }
 
-.unitsInlineModal{
-  padding: 8px 12px;
-}
+.unitsInlineModal{ padding: 8px 12px; }
 
 .catalogModalPrice{
   margin: 0;
@@ -766,7 +787,6 @@
   background: rgba(203,14,14,0.05);
 }
 
-/* Backdrop */
 .catalogBackdrop{
   position: fixed;
   inset: 0;
@@ -778,20 +798,156 @@
   cursor: pointer;
 }
 
-/* Mobile tweaks */
+/* Mobile tweaks modal */
 @media (max-width: 700px){
-  .catalogModalCard{
-    width: 96vw;
-    max-height: 88vh;
+  .catalogModalCard{ width: 96vw; max-height: 88vh; }
+  .catalogModalImg{ max-height: 44vh; }
+  .catalogModalActions{ grid-template-columns: 1fr; }
+  .catalogModalMeta{ flex-direction: column; align-items: flex-start; }
+}
+
+/* =========================================================
+   ✅ MOBILE PROFESSIONAL FILTERS (TOP BAR + BOTTOM SHEET)
+   ========================================================= */
+@media (max-width: 700px){
+  /* Layout: products first vibe */
+  .catalogLayout{
+    gap: 12px;
+    margin-top: 12px;
   }
-  .catalogModalImg{
-    max-height: 44vh;
+
+  /* Show top bar */
+  .filtersBar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+
+    position: sticky;
+    top: 78px; /* ajusta si tu navbar es más alta */
+    z-index: 20;
+
+    padding: 10px 10px;
+    border-radius: 14px;
+    border: 1px solid rgba(0,0,0,0.08);
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+    backdrop-filter: blur(8px);
   }
-  .catalogModalActions{
+
+  .filtersBarBtn{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,0.12);
+    background: rgba(255,255,255,0.96);
+    cursor: pointer;
+    font-weight: 1000;
+    color: rgba(0,0,0,0.78);
+  }
+  .filtersBarBtn:hover{
+    border-color: rgba(203,14,14,0.25);
+    background: rgba(203,14,14,0.04);
+  }
+  .filtersBarIcon{
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    background: rgba(203,14,14,0.06);
+    border: 1px solid rgba(203,14,14,0.14);
+    font-size: 14px;
+  }
+
+  .filtersBarMeta{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 900;
+    color: rgba(0,0,0,0.62);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .filtersBarDot{ color: rgba(0,0,0,0.30); }
+
+  /* Convert sidebar to overlay sheet */
+  .filters{
+    position: relative;
+    top: auto;
+  }
+
+  /* Backdrop hidden unless open */
+  .filtersBackdrop{
+    display: none;
+  }
+
+  /* Sheet base state */
+  .filtersCard{
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    z-index: 9997;
+
+    border-radius: 18px;
+    padding: 14px;
+
+    transform: translateY(120%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 220ms ease, opacity 200ms ease;
+  }
+
+  /* Open state */
+  .filters.filtersOpen .filtersBackdrop{
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 9996;
+    background: rgba(0,0,0,0.40);
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .filters.filtersOpen .filtersCard{
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+    box-shadow: 0 28px 60px rgba(0,0,0,0.25);
+  }
+
+  /* Close button now visible */
+  .filtersClose{ display: inline-flex; align-items: center; justify-content: center; }
+
+  /* Make content more compact */
+  .filtersTitleRow{ margin-bottom: 8px; }
+  .filtersLabel{ font-size: 12.5px; margin-bottom: 7px; }
+  .segBtn{ padding: 10px 8px; border-radius: 12px; font-size: 13px; }
+
+  .priceHint, .priceValue{ font-size: 12.5px; }
+  .priceMinMax{ font-size: 11.5px; }
+
+  /* Actions show */
+  .filtersActions{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Extra tight mobile */
+@media (max-width: 420px){
+  .filtersBar{
+    top: 74px;
+    padding: 9px;
+  }
+  .filtersBarMeta{
+    display: none; /* ultra limpio */
+  }
+  .filtersActions{
     grid-template-columns: 1fr;
-  }
-  .catalogModalMeta{
-    flex-direction: column;
-    align-items: flex-start;
   }
 }

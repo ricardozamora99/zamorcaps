@@ -25,39 +25,49 @@ export default function AboutSection() {
           <article className={styles.card} role="listitem">
             <div className={styles.icon} aria-hidden="true">🔥</div>
             <h3 className={styles.cardTitle}>Diseño que destaca</h3>
-            <p className={styles.cardText}>
+            <p className={`${styles.cardText} ${styles.textLong}`}>
               Colecciones con estilo único: bordados, colores y detalles que se notan.
+            </p>
+            <p className={`${styles.cardText} ${styles.textShort}`}>
+              Bordados y detalles que destacan.
             </p>
           </article>
 
           <article className={styles.card} role="listitem">
             <div className={styles.icon} aria-hidden="true">🧵</div>
             <h3 className={styles.cardTitle}>Calidad real</h3>
-            <p className={styles.cardText}>
+            <p className={`${styles.cardText} ${styles.textLong}`}>
               Materiales premium y acabados cuidados. Una gorra que dura y se siente bien.
+            </p>
+            <p className={`${styles.cardText} ${styles.textShort}`}>
+              Material premium, dura más.
             </p>
           </article>
 
           <article className={styles.card} role="listitem">
             <div className={styles.icon} aria-hidden="true">⚡</div>
             <h3 className={styles.cardTitle}>Compra fácil</h3>
-            <p className={styles.cardText}>
+            <p className={`${styles.cardText} ${styles.textLong}`}>
               Pides por WhatsApp, confirmamos disponibilidad y coordinamos entrega/envío.
+            </p>
+            <p className={`${styles.cardText} ${styles.textShort}`}>
+              Pide por WhatsApp, rápido.
+            </p>
+          </article>
+
+          {/* ✅ NUEVA CARD */}
+          <article className={styles.card} role="listitem">
+            <div className={styles.icon} aria-hidden="true">🇨🇴</div>
+            <h3 className={styles.cardTitle}>Envíos a Colombia</h3>
+            <p className={`${styles.cardText} ${styles.textLong}`}>
+              Enviamos a todo Colombia. Coordinamos el envío y te damos seguimiento del pedido.
+            </p>
+            <p className={`${styles.cardText} ${styles.textShort}`}>
+              Envíos a todo el país.
             </p>
           </article>
         </div>
 
-        <aside className={styles.strip} aria-label="Asesoría rápida">
-          <div className={styles.stripLeft}>
-            <p className={styles.stripTitle}>¿Buscas algo en particular?</p>
-            <p className={styles.stripSub}>Escríbenos y te asesoramos en minutos.</p>
-          </div>
-
-          <a className={styles.stripBtn} href="#contacto">
-            Ir a contacto
-            <span className={styles.btnArrow} aria-hidden="true">→</span>
-          </a>
-        </aside>
       </div>
     </section>
   );

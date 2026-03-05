@@ -7,7 +7,6 @@ export default function RecommendationsSection() {
 
   return (
     <section id="recomendaciones" className={`section ${styles.rec}`}>
-      {/* ===== HERO / STATEMENT ===== */}
       <header className={styles.head}>
         <span className={styles.kicker}>Recomendaciones</span>
         <h2 className={styles.title}>
@@ -18,7 +17,6 @@ export default function RecommendationsSection() {
         </p>
       </header>
 
-      {/* ===== TIPOS DE GORRA ===== */}
       <div className={styles.types} role="list">
         <article className={styles.typeCard} role="listitem">
           <h3>Fitted</h3>
@@ -45,7 +43,6 @@ export default function RecommendationsSection() {
         </article>
       </div>
 
-      {/* ===== GUIDE PANEL (TU IMAGEN) ===== */}
       <div className={styles.guide}>
         <div className={styles.guideText}>
           <h3 className={styles.guideTitle}>Guía visual rápida</h3>
@@ -74,7 +71,6 @@ export default function RecommendationsSection() {
         </figure>
       </div>
 
-      {/* ===== QUICK PICK ===== */}
       <div className={styles.pick}>
         <h3 className={styles.pickTitle}>¿Qué estás buscando?</h3>
         <p className={styles.pickSub}>Elige una opción y te recomendamos la mejor.</p>
@@ -105,11 +101,8 @@ export default function RecommendationsSection() {
         )}
       </div>
 
-      {/* ===== CTA ===== */}
       <div className={styles.cta}>
-        <p>
-          ¿Aún con dudas? Te asesoramos directo por WhatsApp en minutos.
-        </p>
+        <p>¿Aún con dudas? Te asesoramos directo por WhatsApp en minutos.</p>
         <a href="#contacto">Hablar con un asesor</a>
       </div>
     </section>

@@ -185,17 +185,7 @@ export default function CatalogSection({ onAddToCart }) {
         })}
       </div>
 
-      {/* Botón debajo del catálogo */}
-      <div className={styles.bottomRow}>
-        <button
-          className={styles.viewAllBtn}
-          type="button"
-          onClick={() => navigate("/catalogo")}
-          aria-label="Ver catálogo completo"
-        >
-          Ver catálogo completo
-        </button>
-      </div>
+
 
       <h3 id="bolsos" className={styles.title}>
         BOLSOS
@@ -314,6 +304,17 @@ export default function CatalogSection({ onAddToCart }) {
           />
         </>
       )}
+            {/* Botón debajo del catálogo */}
+      <div className={styles.bottomRow}>
+        <button
+          className={styles.viewAllBtn}
+          type="button"
+          onClick={() => navigate("/catalogo")}
+          aria-label="Ver catálogo completo"
+        >
+          Ver catálogo completo
+        </button>
+      </div>
     </section>
   );
 }

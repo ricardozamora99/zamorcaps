@@ -6,6 +6,7 @@ import "./CatalogPage.css";
 const PAGE_SIZE = 12; // 3x4
 
 export default function CatalogPage({ onAddToCart }) {
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -209,130 +210,168 @@ export default function CatalogPage({ onAddToCart }) {
 
       <section className="catalogLayout" aria-label="Catálogo con filtros">
         {/* ===== LEFT FILTERS ===== */}
-        <aside className="filters" aria-label="Filtros">
-          <div className="filtersCard">
-            <div className="filtersTitleRow">
-              <strong className="filtersTitle">Filtros</strong>
-              <button className="filtersReset" type="button" onClick={resetFilters}>
-                Reset
-              </button>
-            </div>
+{/* ===== LEFT FILTERS ===== */}
+<aside className={`filters ${filtersOpen ? "filtersOpen" : ""}`} aria-label="Filtros">
+  {/* Mobile top bar */}
+  <div className="filtersBar">
+    <button
+      type="button"
+      className="filtersBarBtn"
+      onClick={() => setFiltersOpen(true)}
+      aria-label="Abrir filtros"
+    >
+      <span className="filtersBarIcon" aria-hidden="true">⚙️</span>
+      Filtrar
+    </button>
 
-            <div className="filtersBlock">
-              <div className="filtersLabel">Tipo</div>
-              <div className="segmented" role="tablist" aria-label="Filtro por tipo">
-                <button
-                  className={`segBtn ${type === "all" ? "segActive" : ""}`}
-                  type="button"
-                  onClick={() => {
-                    setType("all");
-                    setPage(1);
-                  }}
-                >
-                  Todos
-                </button>
-                <button
-                  className={`segBtn ${type === "cap" ? "segActive" : ""}`}
-                  type="button"
-                  onClick={() => {
-                    setType("cap");
-                    setPage(1);
-                  }}
-                >
-                  Gorras
-                </button>
-                <button
-                  className={`segBtn ${type === "bag" ? "segActive" : ""}`}
-                  type="button"
-                  onClick={() => {
-                    setType("bag");
-                    setPage(1);
-                  }}
-                >
-                  Bolsos
-                </button>
-              </div>
-            </div>
+    <div className="filtersBarMeta" aria-label="Resumen">
+      <span><strong>{filtered.length}</strong> productos</span>
+      <span className="filtersBarDot">•</span>
+      <span>Pág <strong>{safePage}</strong>/<strong>{totalPages}</strong></span>
+    </div>
 
-            <div className="filtersBlock">
-              <div className="filtersLabel">Rango de precio</div>
+    <button className="filtersReset" type="button" onClick={resetFilters}>
+      Reset
+    </button>
+  </div>
 
-              <div className="priceTop">
-                <span className="priceHint">Desde</span>
-                <span className="priceValue">{priceBounds.max ? `${formatCOP(safeMin)} COP` : "—"}</span>
-              </div>
+  {/* Backdrop solo en mobile */}
+  <button
+    className="filtersBackdrop"
+    type="button"
+    onClick={() => setFiltersOpen(false)}
+    aria-label="Cerrar filtros"
+  />
 
-              <div className="priceTop">
-                <span className="priceHint">Hasta</span>
-                <span className="priceValue">{priceBounds.max ? `${formatCOP(safeMax)} COP` : "—"}</span>
-              </div>
+  {/* Sheet */}
+  <div className="filtersCard">
+    <div className="filtersTitleRow">
+      <strong className="filtersTitle">Filtros</strong>
+      <button
+        className="filtersClose"
+        type="button"
+        onClick={() => setFiltersOpen(false)}
+        aria-label="Cerrar"
+      >
+        ✕
+      </button>
+    </div>
 
-              <div
-                className="rangeWrap"
-                style={{
-                  "--minPct": `${rangeUI.minPct}%`,
-                  "--maxPct": `${rangeUI.maxPct}%`,
-                }}
-              >
-                <div className="rangeTrack" aria-hidden="true" />
-                <input
-                  className="priceRange priceRangeMin"
-                  type="range"
-                  min={priceBounds.min || 0}
-                  max={priceBounds.max || 0}
-                  step={priceBounds.step || 1000}
-                  value={priceBounds.max ? safeMin : 0}
-                  onChange={(e) => {
-                    const v = Number(e.target.value);
-                    setMinPrice(v);
-                    if (v > safeMax) setMaxPrice(v);
-                    setPage(1);
-                  }}
-                  disabled={!priceBounds.max}
-                  aria-label="Precio mínimo"
-                />
+    {/* --- Tu contenido igual --- */}
+    <div className="filtersBlock">
+      <div className="filtersLabel">Tipo</div>
+      <div className="segmented" role="tablist" aria-label="Filtro por tipo">
+        <button
+          className={`segBtn ${type === "all" ? "segActive" : ""}`}
+          type="button"
+          onClick={() => { setType("all"); setPage(1); }}
+        >
+          Todos
+        </button>
+        <button
+          className={`segBtn ${type === "cap" ? "segActive" : ""}`}
+          type="button"
+          onClick={() => { setType("cap"); setPage(1); }}
+        >
+          Gorras
+        </button>
+        <button
+          className={`segBtn ${type === "bag" ? "segActive" : ""}`}
+          type="button"
+          onClick={() => { setType("bag"); setPage(1); }}
+        >
+          Bolsos
+        </button>
+      </div>
+    </div>
 
-                <input
-                  className="priceRange priceRangeMax"
-                  type="range"
-                  min={priceBounds.min || 0}
-                  max={priceBounds.max || 0}
-                  step={priceBounds.step || 1000}
-                  value={priceBounds.max ? safeMax : 0}
-                  onChange={(e) => {
-                    const v = Number(e.target.value);
-                    setMaxPrice(v);
-                    if (v < safeMin) setMinPrice(v);
-                    setPage(1);
-                  }}
-                  disabled={!priceBounds.max}
-                  aria-label="Precio máximo"
-                />
-              </div>
+    <div className="filtersBlock">
+      <div className="filtersLabel">Rango de precio</div>
 
-              <div className="priceMinMax" aria-hidden="true">
-                <span>{priceBounds.min ? `${formatCOP(priceBounds.min)} COP` : "—"}</span>
-                <span>{priceBounds.max ? `${formatCOP(priceBounds.max)} COP` : "—"}</span>
-              </div>
+      <div className="priceTop">
+        <span className="priceHint">Desde</span>
+        <span className="priceValue">{priceBounds.max ? `${formatCOP(safeMin)} COP` : "—"}</span>
+      </div>
 
-              <div className="filtersNote">Agrega al carrito y contáctanos por WhatsApp.</div>
-            </div>
+      <div className="priceTop">
+        <span className="priceHint">Hasta</span>
+        <span className="priceValue">{priceBounds.max ? `${formatCOP(safeMax)} COP` : "—"}</span>
+      </div>
 
-            <div className="filtersDivider" />
+      <div
+        className="rangeWrap"
+        style={{ "--minPct": `${rangeUI.minPct}%`, "--maxPct": `${rangeUI.maxPct}%` }}
+      >
+        <div className="rangeTrack" aria-hidden="true" />
 
-            <div className="filtersMeta">
-              <div className="filtersCount">
-                Mostrando <strong>{filtered.length}</strong> producto(s)
-              </div>
-              <div className="filtersSmall">
-                Página <strong>{safePage}</strong> de <strong>{totalPages}</strong>
-              </div>
-              <div className="filtersSmall">
-                Orden: <strong>Precio (menor → mayor)</strong>
-              </div>
-            </div>
-          </div>
-        </aside>
+        <input
+          className="priceRange priceRangeMin"
+          type="range"
+          min={priceBounds.min || 0}
+          max={priceBounds.max || 0}
+          step={priceBounds.step || 1000}
+          value={priceBounds.max ? safeMin : 0}
+          onChange={(e) => {
+            const v = Number(e.target.value);
+            setMinPrice(v);
+            if (v > safeMax) setMaxPrice(v);
+            setPage(1);
+          }}
+          disabled={!priceBounds.max}
+          aria-label="Precio mínimo"
+        />
+
+        <input
+          className="priceRange priceRangeMax"
+          type="range"
+          min={priceBounds.min || 0}
+          max={priceBounds.max || 0}
+          step={priceBounds.step || 1000}
+          value={priceBounds.max ? safeMax : 0}
+          onChange={(e) => {
+            const v = Number(e.target.value);
+            setMaxPrice(v);
+            if (v < safeMin) setMinPrice(v);
+            setPage(1);
+          }}
+          disabled={!priceBounds.max}
+          aria-label="Precio máximo"
+        />
+      </div>
+
+      <div className="priceMinMax" aria-hidden="true">
+        <span>{priceBounds.min ? `${formatCOP(priceBounds.min)} COP` : "—"}</span>
+        <span>{priceBounds.max ? `${formatCOP(priceBounds.max)} COP` : "—"}</span>
+      </div>
+
+      <div className="filtersNote">Agrega al carrito y contáctanos por WhatsApp.</div>
+    </div>
+
+    <div className="filtersDivider" />
+
+    <div className="filtersMeta">
+      <div className="filtersCount">
+        Mostrando <strong>{filtered.length}</strong> producto(s)
+      </div>
+      <div className="filtersSmall">
+        Página <strong>{safePage}</strong> de <strong>{totalPages}</strong>
+      </div>
+      <div className="filtersSmall">
+        Orden: <strong>Precio (menor → mayor)</strong>
+      </div>
+    </div>
+
+    {/* Mobile bottom actions */}
+    <div className="filtersActions">
+      <button className="filtersApply" type="button" onClick={() => setFiltersOpen(false)}>
+        Ver productos
+      </button>
+      <button className="filtersReset filtersResetWide" type="button" onClick={resetFilters}>
+        Reset
+      </button>
+    </div>
+  </div>
+</aside>
 
         {/* ===== RIGHT: GRID ===== */}
         <div className="catalogRight">
@@ -365,7 +404,7 @@ export default function CatalogPage({ onAddToCart }) {
                   <div className="catalogBody">
                     <div className="catalogTopRow">
                       <h3 className="catalogName">{p.title}</h3>
-                      {p?.productId ? <span className="codeBadge">{p.productId}</span> : null}
+                      {/*{p?.productId ? <span className="codeBadge">{p.productId}</span> : null} */}
                     </div>
 
                     <p className="catalogDesc">{p.description || "Descripción pendiente."}</p>
