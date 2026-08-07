@@ -69,14 +69,14 @@ export default {
     },
 
     // ✅ ID interno automático
-    {
-      name: "productId",
-      title: "ID del producto",
-      type: "string",
-      description: "ID interno (ej: ZC-0001)",
-      readOnly: true,
-      // validation removida para permitir generación automática
-    },
+    // {
+    //   name: "productId",
+    //   title: "ID del producto",
+    //   type: "string",
+    //   description: "ID interno (ej: ZC-0001)",
+    //   readOnly: true,
+    //   // validation removida para permitir generación automática
+    // },
   ],
 
   preview: {
